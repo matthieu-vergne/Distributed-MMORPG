@@ -16,15 +16,15 @@ public class Sphere extends DefaultElement {
 
 	public Sphere(float radius) {
 		sphere = new com.sun.j3d.utils.geometry.Sphere(radius);
-		System.out.println(sphere
-				.getAppearance()
-				.getTransparencyAttributes());
-		Transform3D pos1 = new Transform3D();
-		pos1.setTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
-		SphereTrans.setScale(new Vector3d(1.0, .8, 1.0));
-		sphereTransGroup.setTransform(pos1);
 		sphereTransGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		sphereTransGroup.addChild(sphere);
+		setPosition(0, 0, 0);
+	}
+
+	public void setPosition(double x, double y, double z) {
+		Transform3D pos1 = new Transform3D();
+		pos1.setTranslation(new Vector3d(x, y, z));
+		sphereTransGroup.setTransform(pos1);
 	}
 
 	public void putInBranchGroup(BranchGroup branchGroup) {

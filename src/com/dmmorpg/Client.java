@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.media.j3d.AmbientLight;
@@ -31,6 +32,7 @@ import javax.swing.Timer;
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -40,21 +42,22 @@ import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class Client extends Applet {
-	private static final double stepSize = .05;
-	private static final double angleSize = .0002;
+	private static final double STEP_SIZE = .05;
+	private static final double ANGLE_SIZE = .0005;
+	private static final int WINDOW_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+	private static final int WINDOW_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static final long serialVersionUID = 1L;
 	private final Robot mouseControler;
 	private final Logger logger = Logger.getAnonymousLogger();
 	private final Label foot = new Label("-");
 	private final SimpleUniverse universe;
-	private float userX = -2;
-	private float userY = 0;
-	private float userZ = 0;
-	private float YAngle = 0;
-	private float ZAngle = 0;
+	private Vector3d position = new Vector3d(0, 0, 0);
+	private Vector3d direction = new Vector3d(1, 0, 0);
+	private Vector3d upVector = new Vector3d(0, 0, 1);
 	private final Collection<IElement> elements = new HashSet<IElement>();
 
 	public Client() {
+		logger.setLevel(Level.WARNING);
 		try {
 			mouseControler = new Robot();
 		} catch (AWTException e) {
@@ -91,22 +94,74 @@ public class Client extends Applet {
 				return false;
 			}
 		};
+		sphere.setPosition(2, 0, 0);
+		sphere.putInBranchGroup(objRoot);
+		elements.add(sphere);
+		sphere = new Sphere(0.25f) {
+			@Override
+			protected boolean hasChanged() {
+				return false;
+			}
+		};
+		sphere.setPosition(0, 2, 0);
+		sphere.putInBranchGroup(objRoot);
+		elements.add(sphere);
+		sphere = new Sphere(0.25f) {
+			@Override
+			protected boolean hasChanged() {
+				return false;
+			}
+		};
+		sphere.setPosition(-2, 0, 0);
+		sphere.putInBranchGroup(objRoot);
+		elements.add(sphere);
+		sphere = new Sphere(0.25f) {
+			@Override
+			protected boolean hasChanged() {
+				return false;
+			}
+		};
+		sphere.setPosition(0, -2, 0);
+		sphere.putInBranchGroup(objRoot);
+		elements.add(sphere);
+		sphere = new Sphere(0.25f) {
+			@Override
+			protected boolean hasChanged() {
+				return false;
+			}
+		};
+		sphere.setPosition(0, 0, 2);
+		sphere.putInBranchGroup(objRoot);
+		elements.add(sphere);
+		sphere = new Sphere(0.25f) {
+			@Override
+			protected boolean hasChanged() {
+				return false;
+			}
+		};
+		sphere.setPosition(0, 0, -2);
 		sphere.putInBranchGroup(objRoot);
 		elements.add(sphere);
 
 		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
 				100.0);
-		Color3f light1Color = new Color3f(0.0f, 3.0f, 0.0f);
-		Vector3f light1Direction = new Vector3f(1, -1, -1);
-		DirectionalLight light1 = new DirectionalLight(light1Color,
-				light1Direction);
+		Color3f greenColor = new Color3f(0.0f, 3.0f, 0.0f);
+		Vector3f lightDirection = new Vector3f(1, -1, -1);
+		DirectionalLight light1 = new DirectionalLight(greenColor,
+				lightDirection);
 		light1.setInfluencingBounds(bounds);
 		objRoot.addChild(light1);
 
+		Color3f redColor = new Color3f(3.0f, 0.0f, 0.0f);
+		lightDirection.negate();
+		DirectionalLight light2 = new DirectionalLight(redColor,
+				lightDirection);
+		light2.setInfluencingBounds(bounds);
+		objRoot.addChild(light2);
+
 		// Régler la lumière ambiante
-		Color3f ambientColor = new Color3f(0.0f, 0.0f, 0.0f);
+		Color3f ambientColor = new Color3f(100000f, 0.0f, 0.0f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientColor);
-		ambientLightNode.setBounds(bounds);
 		ambientLightNode.setInfluencingBounds(bounds);
 		objRoot.addChild(ambientLightNode);
 
@@ -136,27 +191,29 @@ public class Client extends Applet {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
-				switch (key) {
-				case KeyEvent.VK_RIGHT:
-					logger.info("go right");
-					userY -= stepSize;
-					break;
-				case KeyEvent.VK_LEFT:
+				Vector3d movementDirection = new Vector3d();
+				if (key == KeyEvent.VK_UP) {
+					logger.info("go front");
+					movementDirection.set(direction);
+				} else if (key == KeyEvent.VK_DOWN) {
+					logger.info("go back");
+					movementDirection.negate(direction);
+				} else if (key == KeyEvent.VK_LEFT) {
 					logger.info("go left");
-					userY += stepSize;
-					break;
-				case KeyEvent.VK_UP:
-					logger.info("go up");
-					userX += stepSize;
-					break;
-				case KeyEvent.VK_DOWN:
-					logger.info("go down");
-					userX -= stepSize;
-					break;
-				default:
+					movementDirection.cross(upVector, direction);
+					movementDirection.normalize();
+				} else if (key == KeyEvent.VK_RIGHT) {
+					logger.info("go back");
+					movementDirection.cross(direction, upVector);
+					movementDirection.normalize();
+				} else {
 					logger.warning("unused key : " + key);
 					return;
 				}
+				Tuple3d movement = new Vector3d();
+				movement.scale(STEP_SIZE, movementDirection);
+				logger.info("Movement : " + movement);
+				position.add(movement);
 				updateCamera();
 			}
 		});
@@ -177,11 +234,36 @@ public class Client extends Applet {
 				}
 
 				int deltaX = newX - originX;
-				int deltaY = newY - originY;
+				int deltaY = originY - newY;
 				mouseControler.mouseMove(originX, originY);
 
-				YAngle -= (float) deltaY * angleSize;
-				ZAngle -= (float) deltaX * angleSize;
+				if (deltaX != 0) {
+					Vector3d horizontalDirection = new Vector3d(direction);
+					horizontalDirection.cross(direction, upVector);
+					horizontalDirection.normalize();
+					horizontalDirection.scale(Math.sin(deltaX*ANGLE_SIZE));
+					Vector3d finalDirection = new Vector3d();
+					finalDirection.scaleAdd(Math.cos(deltaX*ANGLE_SIZE), direction, horizontalDirection);
+					finalDirection.normalize();
+					
+					direction.set(finalDirection);
+				}
+				if (deltaY != 0) {
+					Vector3d verticalDirection = new Vector3d(upVector);
+					verticalDirection.scale(Math.sin(deltaY*ANGLE_SIZE));
+					Vector3d finalDirection = new Vector3d();
+					finalDirection.scaleAdd(Math.cos(deltaY*ANGLE_SIZE), direction, verticalDirection);
+					finalDirection.normalize();
+					
+					Vector3d backDirection = new Vector3d(direction);
+					backDirection.scale(Math.sin(-deltaY*ANGLE_SIZE));
+					Vector3d finalUpVector = new Vector3d();
+					finalUpVector.scaleAdd(Math.cos(deltaY*ANGLE_SIZE), upVector, backDirection);
+					finalUpVector.normalize();
+					
+					direction.set(finalDirection);
+					upVector.set(finalUpVector);
+				}
 				updateCamera();
 			}
 
@@ -197,8 +279,10 @@ public class Client extends Applet {
 				.getViewPlatformTransform();
 		Transform3D t3d = new Transform3D();
 		steerTG.getTransform(t3d);
-		t3d.lookAt(new Point3d(userX, userY, userZ), new Point3d(userX + Math.cos(YAngle)*Math.cos(ZAngle),
-				userY+Math.sin(ZAngle), userZ + Math.sin(YAngle)), new Vector3d(0, 0, 1));
+		Tuple3d target = new Vector3d();
+		target.add(position);
+		target.add(direction);
+		t3d.lookAt(new Point3d(position), new Point3d(target), upVector);
 		t3d.invert();
 		steerTG.setTransform(t3d);
 
@@ -226,6 +310,6 @@ public class Client extends Applet {
 	public static void main(String[] args) {
 		System.out.println("Program Started");
 		Client client = new Client();
-		new MainFrame(client, 600, 600);
+		new MainFrame(client, WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 }

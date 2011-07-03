@@ -58,6 +58,10 @@ public class Client extends Applet {
 	private Vector3d direction = new Vector3d(1, 0, 0);
 	private Vector3d upVector = new Vector3d(0, 0, 1);
 	private final Collection<IElement> elements = new HashSet<IElement>();
+	private boolean goingFront = false;
+	private boolean goingBack = false;
+	private boolean goingLeft = false;
+	private boolean goingRight = false;
 
 	public Client() {
 		logger.setLevel(Level.WARNING);
@@ -206,43 +210,40 @@ public class Client extends Applet {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				System.out.println("type");
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				System.out.println("release");
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_UP) {
+					setGoingFront(false);
+				} else if (key == KeyEvent.VK_DOWN) {
+					setGoingBack(false);
+				} else if (key == KeyEvent.VK_LEFT) {
+					setGoingLeft(false);
+				} else if (key == KeyEvent.VK_RIGHT) {
+					setGoingRight(false);
+				} else {
+					logger.warning("unused key : " + key);
+				}
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println("press : " + e.paramString());
 				int key = e.getKeyCode();
-				Vector3d movementDirection = new Vector3d();
 				if (key == KeyEvent.VK_UP) {
-					logger.info("go front");
-					movementDirection.set(direction);
+					setGoingFront(true);
 				} else if (key == KeyEvent.VK_DOWN) {
-					logger.info("go back");
-					movementDirection.negate(direction);
+					setGoingBack(true);
 				} else if (key == KeyEvent.VK_LEFT) {
-					logger.info("go left");
-					movementDirection.cross(upVector, direction);
-					movementDirection.normalize();
+					setGoingLeft(true);
 				} else if (key == KeyEvent.VK_RIGHT) {
-					logger.info("go right");
-					movementDirection.cross(direction, upVector);
-					movementDirection.normalize();
+					setGoingRight(true);
 				} else {
 					logger.warning("unused key : " + key);
-					return;
 				}
-				Tuple3d movement = new Vector3d();
-				movement.scale(STEP_SIZE, movementDirection);
-				logger.info("Movement : " + movement);
-				position.add(movement);
-				updateCamera();
 			}
+
 		});
 
 		universe.getCanvas().addMouseMotionListener(new MouseMotionListener() {
@@ -327,6 +328,20 @@ public class Client extends Applet {
 			element.updateInUniverse();
 		}
 
+		if (isGoingFront()) {
+			goFront();
+		}
+		else if (isGoingBack()) {
+			goBack();
+		}
+		
+		if (isGoingLeft()) {
+			goLeft();
+		}
+		else if (isGoingRight()) {
+			goRight();
+		}
+
 		TransformGroup steerTG = universe.getViewingPlatform()
 				.getViewPlatformTransform();
 		Transform3D t3d = new Transform3D();
@@ -341,5 +356,83 @@ public class Client extends Applet {
 		System.out.println("Program Started");
 		Client client = new Client();
 		new MainFrame(client, WINDOW_WIDTH, WINDOW_HEIGHT);
+	}
+
+	public void setGoingFront(boolean goingFront) {
+		this.goingFront = goingFront;
+	}
+
+	public boolean isGoingFront() {
+		return goingFront;
+	}
+
+	public void setGoingBack(boolean goingBack) {
+		this.goingBack = goingBack;
+	}
+
+	public boolean isGoingBack() {
+		return goingBack;
+	}
+
+	public void setGoingLeft(boolean goingLeft) {
+		this.goingLeft = goingLeft;
+	}
+
+	public boolean isGoingLeft() {
+		return goingLeft;
+	}
+
+	public void setGoingRight(boolean goingRight) {
+		this.goingRight = goingRight;
+	}
+
+	public boolean isGoingRight() {
+		return goingRight;
+	}
+
+	private void goRight() {
+		logger.info("go right");
+		Vector3d movementDirection = new Vector3d();
+		movementDirection.cross(direction, upVector);
+		movementDirection.normalize();
+		Tuple3d movement = new Vector3d();
+		movement.scale(STEP_SIZE, movementDirection);
+		logger.info("Movement : " + movement);
+		position.add(movement);
+		updateCamera();
+	}
+
+	private void goLeft() {
+		logger.info("go left");
+		Vector3d movementDirection = new Vector3d();
+		movementDirection.cross(upVector, direction);
+		movementDirection.normalize();
+		Tuple3d movement = new Vector3d();
+		movement.scale(STEP_SIZE, movementDirection);
+		logger.info("Movement : " + movement);
+		position.add(movement);
+		updateCamera();
+	}
+
+	private void goBack() {
+		logger.info("go back");
+		Vector3d movementDirection = new Vector3d();
+		movementDirection.negate(direction);
+		Tuple3d movement = new Vector3d();
+		movement.scale(STEP_SIZE, movementDirection);
+		logger.info("Movement : " + movement);
+		position.add(movement);
+		updateCamera();
+	}
+
+	private void goFront() {
+		logger.info("go front");
+		Vector3d movementDirection = new Vector3d();
+		movementDirection.set(direction);
+		Tuple3d movement = new Vector3d();
+		movement.scale(STEP_SIZE, movementDirection);
+		logger.info("Movement : " + movement);
+		position.add(movement);
+		updateCamera();
 	}
 }

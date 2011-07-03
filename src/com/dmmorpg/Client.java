@@ -25,6 +25,8 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.DirectionalLight;
+import javax.media.j3d.LineArray;
+import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.BoxLayout;
@@ -44,8 +46,9 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 public class Client extends Applet {
 	private static final double STEP_SIZE = .05;
 	private static final double ANGLE_SIZE = .0005;
-	private static final int WINDOW_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-	private static final int WINDOW_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
+	private static final int WINDOW_WIDTH = Toolkit.getDefaultToolkit()
+			.getScreenSize().width;
+	private static final int WINDOW_HEIGHT = 500;
 	private static final long serialVersionUID = 1L;
 	private final Robot mouseControler;
 	private final Logger logger = Logger.getAnonymousLogger();
@@ -143,6 +146,30 @@ public class Client extends Applet {
 		sphere.putInBranchGroup(objRoot);
 		elements.add(sphere);
 
+		LineArray axisX = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
+		axisX.setCoordinate(0, new Point3d(-2, 0, 0));
+		axisX.setCoordinate(1, new Point3d(2, 0, 0));
+		axisX.setColor(0, new Color3f(1f, 1f, 1f));
+		axisX.setColor(1, new Color3f(1f, 1f, 1f));
+		objRoot.addChild(new Shape3D(axisX));
+
+		LineArray axisY = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
+		axisY.setCoordinate(0, new Point3d(0, -2, 0));
+		axisY.setCoordinate(1, new Point3d(0, 2, 0));
+		axisY.setColor(0, new Color3f(1f, 1f, 1f));
+		axisY.setColor(1, new Color3f(1f, 1f, 1f));
+		objRoot.addChild(new Shape3D(axisY));
+
+		LineArray axisZ = new LineArray(2, LineArray.COORDINATES
+				| LineArray.COLOR_3);
+		axisZ.setCoordinate(0, new Point3d(0, 0, -2));
+		axisZ.setCoordinate(1, new Point3d(0, 0, 2));
+		axisZ.setColor(0, new Color3f(1f, 1f, 1f));
+		axisZ.setColor(1, new Color3f(1f, 1f, 1f));
+		objRoot.addChild(new Shape3D(axisZ));
+
 		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
 				100.0);
 		Color3f greenColor = new Color3f(0.0f, 3.0f, 0.0f);
@@ -154,8 +181,7 @@ public class Client extends Applet {
 
 		Color3f redColor = new Color3f(3.0f, 0.0f, 0.0f);
 		lightDirection.negate();
-		DirectionalLight light2 = new DirectionalLight(redColor,
-				lightDirection);
+		DirectionalLight light2 = new DirectionalLight(redColor, lightDirection);
 		light2.setInfluencingBounds(bounds);
 		objRoot.addChild(light2);
 
@@ -180,16 +206,17 @@ public class Client extends Applet {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// do nothing
+				System.out.println("type");
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// do nothing
+				System.out.println("release");
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
+				System.out.println("press : " + e.paramString());
 				int key = e.getKeyCode();
 				Vector3d movementDirection = new Vector3d();
 				if (key == KeyEvent.VK_UP) {
@@ -203,7 +230,7 @@ public class Client extends Applet {
 					movementDirection.cross(upVector, direction);
 					movementDirection.normalize();
 				} else if (key == KeyEvent.VK_RIGHT) {
-					logger.info("go back");
+					logger.info("go right");
 					movementDirection.cross(direction, upVector);
 					movementDirection.normalize();
 				} else {
@@ -241,26 +268,29 @@ public class Client extends Applet {
 					Vector3d horizontalDirection = new Vector3d(direction);
 					horizontalDirection.cross(direction, upVector);
 					horizontalDirection.normalize();
-					horizontalDirection.scale(Math.sin(deltaX*ANGLE_SIZE));
+					horizontalDirection.scale(Math.sin(deltaX * ANGLE_SIZE));
 					Vector3d finalDirection = new Vector3d();
-					finalDirection.scaleAdd(Math.cos(deltaX*ANGLE_SIZE), direction, horizontalDirection);
+					finalDirection.scaleAdd(Math.cos(deltaX * ANGLE_SIZE),
+							direction, horizontalDirection);
 					finalDirection.normalize();
-					
+
 					direction.set(finalDirection);
 				}
 				if (deltaY != 0) {
 					Vector3d verticalDirection = new Vector3d(upVector);
-					verticalDirection.scale(Math.sin(deltaY*ANGLE_SIZE));
+					verticalDirection.scale(Math.sin(deltaY * ANGLE_SIZE));
 					Vector3d finalDirection = new Vector3d();
-					finalDirection.scaleAdd(Math.cos(deltaY*ANGLE_SIZE), direction, verticalDirection);
+					finalDirection.scaleAdd(Math.cos(deltaY * ANGLE_SIZE),
+							direction, verticalDirection);
 					finalDirection.normalize();
-					
+
 					Vector3d backDirection = new Vector3d(direction);
-					backDirection.scale(Math.sin(-deltaY*ANGLE_SIZE));
+					backDirection.scale(Math.sin(-deltaY * ANGLE_SIZE));
 					Vector3d finalUpVector = new Vector3d();
-					finalUpVector.scaleAdd(Math.cos(deltaY*ANGLE_SIZE), upVector, backDirection);
+					finalUpVector.scaleAdd(Math.cos(deltaY * ANGLE_SIZE),
+							upVector, backDirection);
 					finalUpVector.normalize();
-					
+
 					direction.set(finalDirection);
 					upVector.set(finalUpVector);
 				}

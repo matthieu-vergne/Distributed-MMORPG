@@ -76,9 +76,9 @@ public class Camera {
 			newUpVector.normalize();
 		}
 
-		logger.info("target front angle : " + frontVector.angle(newFrontVector));
+		logger.info("target front angle : ±" + frontVector.angle(newFrontVector));
 		frontVector.set(newFrontVector);
-		logger.info("target up angle : " + upVector.angle(newUpVector));
+		logger.info("target up angle : ±" + upVector.angle(newUpVector));
 		upVector.set(newUpVector);
 	}
 
@@ -98,7 +98,7 @@ public class Camera {
 			newFrontVector.normalize();
 		}
 
-		logger.info("target front angle : " + frontVector.angle(newFrontVector));
+		logger.info("target front angle : ±" + frontVector.angle(newFrontVector));
 		frontVector.set(newFrontVector);
 	}
 

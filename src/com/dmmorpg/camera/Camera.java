@@ -7,9 +7,11 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
+// TODO create tests
+// TODO write javadocs
 public class Camera {
-	private static final double STEP_SPEED = .05;
-	private final Logger logger = Logger.getAnonymousLogger();
+	public static final Logger logger = Logger.getAnonymousLogger();
+	private double stepUnit = .05;
 	private Point3d position = new Point3d();
 	private Vector3d frontVector = new Vector3d(1, 0, 0);
 	private Vector3d upVector = new Vector3d(0, 0, 1);
@@ -20,28 +22,28 @@ public class Camera {
 
 	public void goRight() {
 		Tuple3d movement = new Vector3d();
-		movement.scale(-STEP_SPEED, getLeftVector());
+		movement.scale(-getStepUnit(), getLeftVector());
 		logger.info("Movement : " + movement);
 		getPosition().add(movement);
 	}
 
 	public void goLeft() {
 		Tuple3d movement = new Vector3d();
-		movement.scale(STEP_SPEED, getLeftVector());
+		movement.scale(getStepUnit(), getLeftVector());
 		logger.info("Movement : " + movement);
 		getPosition().add(movement);
 	}
 
 	public void goBack() {
 		Tuple3d movement = new Vector3d();
-		movement.scale(-STEP_SPEED, getFrontVector());
+		movement.scale(-getStepUnit(), getFrontVector());
 		logger.info("Movement : " + movement);
 		getPosition().add(movement);
 	}
 
 	public void goFront() {
 		Tuple3d movement = new Vector3d();
-		movement.scale(STEP_SPEED, getFrontVector());
+		movement.scale(getStepUnit(), getFrontVector());
 		logger.info("Movement : " + movement);
 		getPosition().add(movement);
 	}
@@ -119,6 +121,14 @@ public class Camera {
 
 	public Vector3d getUpVector() {
 		return upVector;
+	}
+
+	public void setStepUnit(double stepSpeed) {
+		this.stepUnit = stepSpeed;
+	}
+
+	public double getStepUnit() {
+		return stepUnit;
 	}
 
 }

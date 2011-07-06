@@ -3,6 +3,8 @@ package com.dmmorpg.util;
 import java.awt.AWTException;
 import java.awt.Robot;
 
+//TODO create tests
+//TODO write javadocs
 public abstract class MouseUtil {
 	private static Robot ROBOT;
 	

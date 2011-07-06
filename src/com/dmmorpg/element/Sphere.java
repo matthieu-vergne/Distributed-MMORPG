@@ -2,6 +2,8 @@ package com.dmmorpg.element;
 
 import javax.media.j3d.Node;
 
+//TODO create tests
+//TODO write javadocs
 public class Sphere extends Default3DElement {
 	@Override
 	protected Node initNode() {

@@ -43,12 +43,12 @@ import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class Client extends Applet {
+	public static final Logger logger = Logger.getAnonymousLogger();
 	private static final double ANGLE_SPEED = .0005;
 	private static final int WINDOW_WIDTH = Toolkit.getDefaultToolkit()
 			.getScreenSize().width;
 	private static final int WINDOW_HEIGHT = 500;
 	private static final long serialVersionUID = 1L;
-	private final Logger logger = Logger.getAnonymousLogger();
 	private final Label coord = new Label("-");
 	private final Label angle = new Label("-");
 	private final SimpleUniverse universe;

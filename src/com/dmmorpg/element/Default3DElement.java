@@ -6,6 +6,8 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3d;
 
+//TODO create tests
+//TODO write javadocs
 public abstract class Default3DElement implements I3DElement {
 	private final TransformGroup transformationGroup = new TransformGroup();
 	private BranchGroup branchGroup;

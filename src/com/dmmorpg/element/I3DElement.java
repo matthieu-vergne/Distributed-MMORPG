@@ -4,6 +4,8 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 
+//TODO create tests
+//TODO write javadocs
 public interface I3DElement {
 
 	public Node getNode();

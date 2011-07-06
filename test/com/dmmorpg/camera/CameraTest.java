@@ -404,4 +404,10 @@ public class CameraTest {
 		tupleEquals(leftVector, camera.getLeftVector());
 		tupleEquals(upVector, camera.getUpVector());
 	}
+	
+	@Test
+	public void testTurnOn() {
+		// TODO implement the possibility to turn on a custom axis before to make this test
+		fail();
+	}
 }

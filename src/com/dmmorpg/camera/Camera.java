@@ -7,8 +7,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
-// TODO create tests
-// TODO write javadocs
 /**
  * The camera is a device which allows to have a simple way to view the
  * universe.
@@ -43,19 +41,9 @@ public class Camera {
 	}
 
 	/**
-	 * Ask to the camera to go to a relative position.<br/>
-	 * Examples :<br/>
-	 * <ol>
-	 * <li>position (0,0,0)</li>
-	 * <li>direction (1,2,3), scale 0</li>
-	 * <li>position (0,0,0)</li>
-	 * <li>direction (1,2,3), scale 1</li>
-	 * <li>position (1,2,3)</li>
-	 * <li>direction (1,1,1), scale 2</li>
-	 * <li>position (3,4,5)</li>
-	 * <li>direction (1,1,1), scale -3</li>
-	 * <li>position (0,1,2)</li>
-	 * </ol>
+	 * Ask to the camera to go to a relative position through a direction. If
+	 * the direction is normalized, the scale is equivalent to the distance to
+	 * travel following this direction, otherwise it is a simple coefficient.
 	 * 
 	 * @param direction
 	 *            the direction to follow
@@ -128,29 +116,31 @@ public class Camera {
 	public void goDown(double distance) {
 		goUp(-distance);
 	}
-	
-	public void turnOn(Vector3d direction, double angle) {
-		logger.info("target direction : " + direction);
-		logger.info("target angle : " + angle);
 
+	/**
+	 * Ask the camera to turn around an axis
+	 * 
+	 * @param axis
+	 * @param angle
+	 */
+	public void turnOn(Vector3d axis, double angle) {
 		Vector3d firstVector;
 		Vector3d secondVector;
-		if (direction == leftVector) {
+		if (axis == leftVector) {
 			firstVector = frontVector;
 			secondVector = upVector;
-		}
-		else if (direction == upVector) {
+		} else if (axis == upVector) {
 			firstVector = frontVector;
 			secondVector = leftVector;
-		}
-		else if (direction == frontVector) {
+		} else if (axis == frontVector) {
 			firstVector = upVector;
 			secondVector = leftVector;
+		} else {
+			// TODO implement the possibility to turn on a custom axis
+			throw new IllegalArgumentException(
+					"the case the direction is not an axis vector is not implemented");
 		}
-		else {
-			throw new IllegalArgumentException("the case the direction is not an axis vector is not implemented");
-		}
-		
+
 		Vector3d newFirstVector = new Vector3d();
 		{
 			Vector3d firstPart = new Vector3d(firstVector);
@@ -178,11 +168,16 @@ public class Camera {
 			newSecondVector.normalize();
 		}
 
-		logger.info("target front angle : ±"
-				+ firstVector.angle(newFirstVector));
+		Vector3d front = new Vector3d(frontVector);
+		Vector3d left = new Vector3d(leftVector);
+		Vector3d up = new Vector3d(upVector);
+
 		firstVector.set(newFirstVector);
-		logger.info("target up angle : ±" + secondVector.angle(newSecondVector));
 		secondVector.set(newSecondVector);
+
+		logger.info("F=±" + front.angle(frontVector) + "rad | L=±"
+				+ left.angle(leftVector) + "rad | U=±" + up.angle(upVector)
+				+ "rad");
 	}
 
 	/**

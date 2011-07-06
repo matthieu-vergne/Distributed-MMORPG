@@ -49,6 +49,7 @@ public class Client extends Applet {
 			.getScreenSize().width;
 	private static final int WINDOW_HEIGHT = 500;
 	private static final long serialVersionUID = 1L;
+	private static final double STEP_UNIT = .05;
 	private final Label coord = new Label("-");
 	private final Label angle = new Label("-");
 	private final SimpleUniverse universe;
@@ -57,6 +58,10 @@ public class Client extends Applet {
 	private boolean goingBack = false;
 	private boolean goingLeft = false;
 	private boolean goingRight = false;
+	private boolean goingUp = false;
+	private boolean goingDown = false;
+	private boolean inclineLeft = false;
+	private boolean inclineRight = false;
 	private Camera camera = new Camera();
 
 	public Client() {
@@ -137,6 +142,14 @@ public class Client extends Applet {
 					setGoingLeft(false);
 				} else if (key == KeyEvent.VK_RIGHT) {
 					setGoingRight(false);
+				} else if (key == KeyEvent.VK_HOME) {
+					setGoingUp(false);
+				} else if (key == KeyEvent.VK_END) {
+					setGoingDown(false);
+				} else if (key == KeyEvent.VK_PAGE_UP) {
+					setInclineLeft(false);
+				} else if (key == KeyEvent.VK_PAGE_DOWN) {
+					setInclineRight(false);
 				} else {
 					logger.warning("unused key : " + key);
 				}
@@ -153,6 +166,14 @@ public class Client extends Applet {
 					setGoingLeft(true);
 				} else if (key == KeyEvent.VK_RIGHT) {
 					setGoingRight(true);
+				} else if (key == KeyEvent.VK_HOME) {
+					setGoingUp(true);
+				} else if (key == KeyEvent.VK_END) {
+					setGoingDown(true);
+				} else if (key == KeyEvent.VK_PAGE_UP) {
+					setInclineLeft(true);
+				} else if (key == KeyEvent.VK_PAGE_DOWN) {
+					setInclineRight(true);
 				} else {
 					logger.warning("unused key : " + key);
 				}
@@ -196,15 +217,27 @@ public class Client extends Applet {
 
 	private void refreshView() {
 		if (isGoingFront()) {
-			camera.goFront();
+			camera.goFront(STEP_UNIT);
 		} else if (isGoingBack()) {
-			camera.goBack();
+			camera.goBack(STEP_UNIT);
 		}
 
 		if (isGoingLeft()) {
-			camera.goLeft();
+			camera.goLeft(STEP_UNIT);
 		} else if (isGoingRight()) {
-			camera.goRight();
+			camera.goRight(STEP_UNIT);
+		}
+
+		if (isGoingUp()) {
+			camera.goUp(STEP_UNIT);
+		} else if (isGoingDown()) {
+			camera.goDown(STEP_UNIT);
+		}
+
+		if (isInclineLeft()) {
+			camera.inclineLeft(STEP_UNIT);
+		} else if (isInclineRight()) {
+			camera.inclineRight(STEP_UNIT);
 		}
 
 		TransformGroup steerTG = universe.getViewingPlatform()
@@ -277,5 +310,36 @@ public class Client extends Applet {
 		return goingRight;
 	}
 
+	public void setGoingUp(boolean goingUp) {
+		this.goingUp = goingUp;
+	}
+
+	public boolean isGoingUp() {
+		return goingUp;
+	}
+
+	public void setGoingDown(boolean goingDown) {
+		this.goingDown = goingDown;
+	}
+
+	public boolean isGoingDown() {
+		return goingDown;
+	}
+
+	public void setInclineLeft(boolean inclineLeft) {
+		this.inclineLeft = inclineLeft;
+	}
+
+	public boolean isInclineLeft() {
+		return inclineLeft;
+	}
+
+	public void setInclineRight(boolean inclineRight) {
+		this.inclineRight = inclineRight;
+	}
+
+	public boolean isInclineRight() {
+		return inclineRight;
+	}
 
 }

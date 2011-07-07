@@ -1,7 +1,6 @@
 package com.dmmorpg.camera;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class CameraTest {
 	private static final double EPSILON = Double.parseDouble("1E-14");
 
-	private static final void tupleEquals(Tuple3d expected, Tuple3d actual) {
+	private static final void assertTupleEquals(Tuple3d expected, Tuple3d actual) {
 		try {
 			assertEquals(expected.x, actual.x, EPSILON);
 			assertEquals(expected.y, actual.y, EPSILON);
@@ -22,21 +21,22 @@ public class CameraTest {
 		}
 	}
 
-	@Test
-	public void testCreation() {
-		Camera camera = new Camera();
-		tupleEquals(new Point3d(0, 0, 0), camera.getPosition());
-		tupleEquals(new Vector3d(1, 0, 0), camera.getFrontVector());
-		tupleEquals(new Vector3d(0, 1, 0), camera.getLeftVector());
-		tupleEquals(new Vector3d(0, 0, 1), camera.getUpVector());
-	}
-
 	public static void assertNormalized(Vector3d vector) {
 		assertEquals(1, vector.length(), EPSILON);
 	}
 
+	private static void assertOrthogonal(Vector3d... vectors) {
+		for (Vector3d v1 : vectors) {
+			for (Vector3d v2 : vectors) {
+				if (v1 != v2) {
+					assertEquals(0, v1.dot(v2), EPSILON);
+				}
+			}
+		}
+	}
+
 	@Test
-	public void testNormalizationOfAxis() {
+	public void testKeepNormalizationOfAxis() {
 		Camera camera = new Camera();
 
 		assertNormalized(camera.getFrontVector());
@@ -105,112 +105,85 @@ public class CameraTest {
 	}
 
 	@Test
-	public void testOrthogonalityOfAxis() {
+	public void testKeepOrthogonalityOfAxis() {
 		Camera camera = new Camera();
 
 		{
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goFront(3.2);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goBack(5);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goLeft(6);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goRight(2.5);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goUp(112);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.goDown(12.3);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.lookUp(3.5);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.lookDown(53);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.lookLeft(64);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.lookRight(35.2);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.inclineLeft(12.5);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
 
 		{
 			camera.inclineRight(95);
-			Vector3d product = new Vector3d();
-			product.cross(camera.getFrontVector(), camera.getLeftVector());
-			tupleEquals(camera.getUpVector(), product);
+			assertOrthogonal(camera.getFrontVector(), camera.getUpVector(),
+					camera.getLeftVector());
 		}
-	}
-
-	@Test
-	public void testGoToPosition() {
-		Camera camera = new Camera();
-		Point3d position = new Point3d(camera.getPosition());
-		position.x += 3;
-		position.y += -5;
-		position.z += 1;
-		camera.goTo(position);
-		tupleEquals(position, camera.getPosition());
-		position.set(1, 2, 3);
-		camera.goTo(position);
-		tupleEquals(position, camera.getPosition());
 	}
 
 	@Test
@@ -218,28 +191,28 @@ public class CameraTest {
 		Camera camera = new Camera();
 
 		{
-			camera.goTo(new Point3d(0, 0, 0));
+			camera.setPosition(new Point3d(0, 0, 0));
 			camera.goTo(new Vector3d(-3, 5, 4), 0);
-			tupleEquals(new Point3d(0, 0, 0), camera.getPosition());
+			assertTupleEquals(new Point3d(0, 0, 0), camera.getPosition());
 		}
 
 		{
-			camera.goTo(new Point3d(0, 0, 0));
+			camera.setPosition(new Point3d(0, 0, 0));
 			camera.goTo(new Vector3d(0, 0, 0), 1000);
-			tupleEquals(new Point3d(0, 0, 0), camera.getPosition());
+			assertTupleEquals(new Point3d(0, 0, 0), camera.getPosition());
 		}
 
 		{
-			camera.goTo(new Point3d(0, 0, 0));
+			camera.setPosition(new Point3d(0, 0, 0));
 			Vector3d delta = new Vector3d(-8.2, 2.5, 3);
 			camera.goTo(delta, 1);
-			tupleEquals(delta, camera.getPosition());
+			assertTupleEquals(delta, camera.getPosition());
 		}
 
 		{
-			camera.goTo(new Point3d(0, 0, 0));
+			camera.setPosition(new Point3d(0, 0, 0));
 			camera.goTo(new Vector3d(7, 5, 9), 10);
-			tupleEquals(new Point3d(70, 50, 90), camera.getPosition());
+			assertTupleEquals(new Point3d(70, 50, 90), camera.getPosition());
 		}
 	}
 
@@ -250,7 +223,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getFrontVector());
 		movement.scale(distance);
 		camera.goFront(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -260,7 +233,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getFrontVector());
 		movement.scale(-distance);
 		camera.goBack(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -270,7 +243,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getLeftVector());
 		movement.scale(distance);
 		camera.goLeft(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -280,7 +253,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getLeftVector());
 		movement.scale(-distance);
 		camera.goRight(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -290,7 +263,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getUpVector());
 		movement.scale(distance);
 		camera.goUp(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -300,7 +273,7 @@ public class CameraTest {
 		Vector3d movement = new Vector3d(camera.getUpVector());
 		movement.scale(-distance);
 		camera.goDown(distance);
-		tupleEquals(movement, camera.getPosition());
+		assertTupleEquals(movement, camera.getPosition());
 	}
 
 	@Test
@@ -315,9 +288,9 @@ public class CameraTest {
 		upVector.negate();
 
 		camera.lookUp(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
 
 	@Test
@@ -332,9 +305,9 @@ public class CameraTest {
 		frontVector.negate();
 
 		camera.lookDown(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
 
 	@Test
@@ -349,9 +322,9 @@ public class CameraTest {
 		leftVector.negate();
 
 		camera.lookLeft(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
 
 	@Test
@@ -366,9 +339,9 @@ public class CameraTest {
 		frontVector.negate();
 
 		camera.lookRight(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
 
 	@Test
@@ -383,9 +356,9 @@ public class CameraTest {
 		leftVector.negate();
 
 		camera.inclineLeft(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
 
 	@Test
@@ -400,14 +373,70 @@ public class CameraTest {
 		upVector.negate();
 
 		camera.inclineRight(Math.PI / 2);
-		tupleEquals(frontVector, camera.getFrontVector());
-		tupleEquals(leftVector, camera.getLeftVector());
-		tupleEquals(upVector, camera.getUpVector());
+		assertTupleEquals(frontVector, camera.getFrontVector());
+		assertTupleEquals(leftVector, camera.getLeftVector());
+		assertTupleEquals(upVector, camera.getUpVector());
 	}
-	
+
+	@Test
+	public void testSetOrientation() {
+		// TODO
+	}
+
 	@Test
 	public void testTurnOn() {
-		// TODO implement the possibility to turn on a custom axis before to make this test
-		fail();
+		Camera camera = new Camera();
+
+		{
+			Vector3d frontVector = new Vector3d(camera.getFrontVector());
+			Vector3d leftVector = new Vector3d(camera.getLeftVector());
+			Vector3d upVector = new Vector3d(camera.getUpVector());
+			camera.turnOn(new Vector3d(5, 6, 4), 0);
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+		}
+
+		{
+			Vector3d frontVector = new Vector3d(camera.getFrontVector());
+			Vector3d leftVector = new Vector3d(camera.getLeftVector());
+			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d temp = leftVector;
+			leftVector = upVector;
+			upVector = temp;
+			leftVector.negate();
+			camera.turnOn(new Vector3d(1, 0, 0), Math.PI / 2);
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+		}
+
+		{
+			Vector3d frontVector = new Vector3d(camera.getFrontVector());
+			Vector3d leftVector = new Vector3d(camera.getLeftVector());
+			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d temp = frontVector;
+			frontVector = upVector;
+			upVector = temp;
+			upVector.negate();
+			camera.turnOn(new Vector3d(0, 1, 0), Math.PI / 2);
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+		}
+
+		{
+			Vector3d frontVector = new Vector3d(camera.getFrontVector());
+			Vector3d leftVector = new Vector3d(camera.getLeftVector());
+			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d temp = frontVector;
+			frontVector = leftVector;
+			leftVector = temp;
+			frontVector.negate();
+			camera.turnOn(new Vector3d(0, 0, 1), Math.PI / 2);
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+		}
 	}
 }

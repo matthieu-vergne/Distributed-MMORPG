@@ -12,6 +12,7 @@ import javax.vecmath.Vector3d;
  * universe.
  */
 public class Camera {
+	private static final double EPSILON = Double.parseDouble("1E-14");
 	public static final Logger logger = Logger.getAnonymousLogger();
 	private Point3d position = new Point3d();
 	private Vector3d frontVector = new Vector3d(1, 0, 0);
@@ -24,20 +25,6 @@ public class Camera {
 	 */
 	public Camera() {
 		logger.setLevel(Level.WARNING);
-	}
-
-	/**
-	 * Ask to the camera to go to an absolute position.
-	 * 
-	 * @param position
-	 *            the new absolute position
-	 */
-	public void goTo(Point3d position) {
-		Tuple3d movement = new Vector3d(getPosition());
-		movement.negate();
-		movement.add(position);
-		logger.info("Movement : " + movement);
-		getPosition().add(movement);
 	}
 
 	/**
@@ -54,7 +41,7 @@ public class Camera {
 		Tuple3d movement = new Vector3d();
 		movement.scale(scale, direction);
 		logger.info("Movement : " + movement);
-		getPosition().add(movement);
+		position.add(movement);
 	}
 
 	/**
@@ -124,6 +111,10 @@ public class Camera {
 	 * @param angle
 	 */
 	public void turnOn(Vector3d axis, double angle) {
+		if (axis.length() == 0) {
+			throw new NullVectorException();
+		}
+
 		Vector3d firstVector;
 		Vector3d secondVector;
 		if (axis == leftVector) {
@@ -138,7 +129,7 @@ public class Camera {
 		} else {
 			// TODO implement the possibility to turn on a custom axis
 			throw new IllegalArgumentException(
-					"the case the direction is not an axis vector is not implemented");
+					"the case the direction is not a known axis vector is not implemented");
 		}
 
 		Vector3d newFirstVector = new Vector3d();
@@ -168,16 +159,12 @@ public class Camera {
 			newSecondVector.normalize();
 		}
 
-		Vector3d front = new Vector3d(frontVector);
-		Vector3d left = new Vector3d(leftVector);
-		Vector3d up = new Vector3d(upVector);
+		logger.info("first vector : " + firstVector + " -> " + newFirstVector
+				+ "\n" + "second vector : " + secondVector + " -> "
+				+ newSecondVector);
 
 		firstVector.set(newFirstVector);
 		secondVector.set(newSecondVector);
-
-		logger.info("F=±" + front.angle(frontVector) + "rad | L=±"
-				+ left.angle(leftVector) + "rad | U=±" + up.angle(upVector)
-				+ "rad");
 	}
 
 	/**
@@ -242,10 +229,46 @@ public class Camera {
 
 	/**
 	 * 
+	 * @param position
+	 *            the new position of the camera
+	 */
+	public void setPosition(Point3d position) {
+		this.position.set(position);
+	}
+
+	/**
+	 * 
 	 * @return the actual position of the camera
 	 */
 	public Point3d getPosition() {
 		return position;
+	}
+
+	/**
+	 * Apply a specific orientation to the camera. The X and Z axis are needed,
+	 * the Y axis is calculated. The X and Z axis must be orthogonal, but they
+	 * do not need to be normalized (all the axis are explicitly normalized in
+	 * this method).
+	 * 
+	 * @param frontVector
+	 *            the local X axis
+	 * @param upVector
+	 *            the local Z axis
+	 */
+	public void setOrientation(Vector3d frontVector, Vector3d upVector) {
+		if (frontVector.length() == 0 || upVector.length() == 0) {
+			throw new NullVectorException();
+		}
+		if (frontVector.dot(upVector) > EPSILON) {
+			throw new NotOrthogonalVectorsException();
+		}
+		
+		this.frontVector.set(frontVector);
+		this.frontVector.normalize();
+		this.upVector.set(upVector);
+		this.upVector.normalize();
+		this.leftVector.cross(upVector, frontVector);
+		this.leftVector.normalize();
 	}
 
 	/**

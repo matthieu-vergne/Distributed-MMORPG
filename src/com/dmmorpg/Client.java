@@ -36,7 +36,7 @@ import javax.vecmath.Vector3f;
 
 import com.dmmorpg.camera.Camera;
 import com.dmmorpg.element.I3DElement;
-import com.dmmorpg.element.Sphere;
+import com.dmmorpg.element.Reactor;
 import com.dmmorpg.util.FormatUtil;
 import com.dmmorpg.util.MouseUtil;
 import com.sun.j3d.utils.applet.MainFrame;
@@ -88,10 +88,10 @@ public class Client extends Applet {
 	public BranchGroup createSceneGraph() {
 		BranchGroup objRoot = new BranchGroup();
 
-		Sphere lampadaire = new Sphere();
-		lampadaire.setPosition(5, 0, 0);
-		lampadaire.setBranchGroup(objRoot);
-		elements.add(lampadaire);
+		Reactor reactor = new Reactor();
+		reactor.setPosition(5, 0, 0);
+		reactor.setBranchGroup(objRoot);
+		elements.add(reactor);
 
 		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0),
 				100.0);
@@ -113,6 +113,7 @@ public class Client extends Applet {
 		ambientLightNode.setInfluencingBounds(bounds);
 		objRoot.addChild(ambientLightNode);
 
+		objRoot.compile();
 		return objRoot;
 	}
 
@@ -133,6 +134,7 @@ public class Client extends Applet {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
+				// TODO extract each event in a set of managers
 				int key = e.getKeyCode();
 				if (key == KeyEvent.VK_UP) {
 					setGoingFront(false);
@@ -197,7 +199,9 @@ public class Client extends Applet {
 
 				int deltaX = newX - originX;
 				int deltaY = newY - originY;
-				MouseUtil.setPositionOnScreen(e.getXOnScreen() - deltaX, e.getYOnScreen() - deltaY);
+				MouseUtil.setPositionOnScreen(e.getXOnScreen() - deltaX, e
+						.getYOnScreen()
+						- deltaY);
 
 				if (deltaX != 0) {
 					camera.lookRight(deltaX * ANGLE_SPEED);

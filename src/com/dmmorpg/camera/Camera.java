@@ -115,56 +115,42 @@ public class Camera {
 			throw new NullVectorException();
 		}
 
-		Vector3d firstVector;
-		Vector3d secondVector;
-		if (axis == leftVector) {
-			firstVector = frontVector;
-			secondVector = upVector;
-		} else if (axis == upVector) {
-			firstVector = frontVector;
-			secondVector = leftVector;
-		} else if (axis == frontVector) {
-			firstVector = upVector;
-			secondVector = leftVector;
-		} else {
-			// TODO implement the possibility to turn on a custom axis
-			throw new IllegalArgumentException(
-					"the case the direction is not a known axis vector is not implemented");
+		for(Vector3d vectorToTurn : new Vector3d[] {frontVector, leftVector, upVector}) {
+			// vector orthogonal to the original vector to turn and the reference axis
+			// it is used in the rotation of the vector
+			Vector3d ortho = new Vector3d();
+			ortho.cross(vectorToTurn, axis);
+			if (ortho.length() == 0) {
+				continue;
+			}
+			ortho.normalize();
+			
+			// alpha = angle between the axis & the original vector
+			double alpha = axis.angle(vectorToTurn);
+			
+			// v1 = original vector'part following the axis
+			Vector3d v1 = new Vector3d();
+			v1.scale(Math.cos(alpha), vectorToTurn);
+			
+			// v2 = original vector's part orthogonal to the axis
+			Vector3d v2 = new Vector3d(v1);
+			v2.negate();
+			v2.add(vectorToTurn);
+			
+			// rotation of the vector v2
+			double length = v2.length();
+			v2.normalize();
+			Vector3d firstPart = new Vector3d();
+			firstPart.scale(Math.cos(angle), v2);
+			Vector3d secondPart = new Vector3d();
+			secondPart.scale(Math.sin(angle), ortho);
+			v2.add(firstPart, secondPart);
+			v2.scale(length);
+			
+			// place the original vector to its new position
+			vectorToTurn.add(v1, v2);
+			vectorToTurn.normalize();
 		}
-
-		Vector3d newFirstVector = new Vector3d();
-		{
-			Vector3d firstPart = new Vector3d(firstVector);
-			firstPart.scale(Math.cos(angle));
-
-			Vector3d secondPart = new Vector3d(secondVector);
-			secondPart.scale(Math.sin(angle));
-
-			newFirstVector.add(firstPart);
-			newFirstVector.add(secondPart);
-			newFirstVector.normalize();
-		}
-
-		Vector3d newSecondVector = new Vector3d();
-		{
-			Vector3d firstPart = new Vector3d(firstVector);
-			firstPart.negate();
-			firstPart.scale(Math.sin(angle));
-
-			Vector3d secondPart = new Vector3d(secondVector);
-			secondPart.scale(Math.cos(angle));
-
-			newSecondVector.add(firstPart);
-			newSecondVector.add(secondPart);
-			newSecondVector.normalize();
-		}
-
-		logger.info("first vector : " + firstVector + " -> " + newFirstVector
-				+ "\n" + "second vector : " + secondVector + " -> "
-				+ newSecondVector);
-
-		firstVector.set(newFirstVector);
-		secondVector.set(newSecondVector);
 	}
 
 	/**
@@ -194,7 +180,7 @@ public class Camera {
 	 *            the angle to look
 	 */
 	public void lookLeft(double angle) {
-		turnOn(upVector, angle);
+		turnOn(upVector, -angle);
 	}
 
 	/**
@@ -262,7 +248,7 @@ public class Camera {
 		if (frontVector.dot(upVector) > EPSILON) {
 			throw new NotOrthogonalVectorsException();
 		}
-		
+
 		this.frontVector.set(frontVector);
 		this.frontVector.normalize();
 		this.upVector.set(upVector);

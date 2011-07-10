@@ -411,9 +411,10 @@ public class CameraTest {
 		Camera camera = new Camera();
 
 		{
-			Vector3d frontVector = new Vector3d(camera.getFrontVector());
-			Vector3d leftVector = new Vector3d(camera.getLeftVector());
-			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d frontVector = new Vector3d(1, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 1, 0);
+			Vector3d upVector = new Vector3d(0, 0, 1);
+			camera.setOrientation(frontVector, upVector);
 			camera.turnOn(new Vector3d(5, 6, 4), 0);
 			assertTupleEquals(frontVector, camera.getFrontVector());
 			assertTupleEquals(leftVector, camera.getLeftVector());
@@ -421,9 +422,10 @@ public class CameraTest {
 		}
 
 		{
-			Vector3d frontVector = new Vector3d(camera.getFrontVector());
-			Vector3d leftVector = new Vector3d(camera.getLeftVector());
-			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d frontVector = new Vector3d(1, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 1, 0);
+			Vector3d upVector = new Vector3d(0, 0, 1);
+			camera.setOrientation(frontVector, upVector);
 			Vector3d temp = leftVector;
 			leftVector = upVector;
 			upVector = temp;
@@ -435,9 +437,10 @@ public class CameraTest {
 		}
 
 		{
-			Vector3d frontVector = new Vector3d(camera.getFrontVector());
-			Vector3d leftVector = new Vector3d(camera.getLeftVector());
-			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d frontVector = new Vector3d(1, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 1, 0);
+			Vector3d upVector = new Vector3d(0, 0, 1);
+			camera.setOrientation(frontVector, upVector);
 			Vector3d temp = frontVector;
 			frontVector = upVector;
 			upVector = temp;
@@ -449,9 +452,10 @@ public class CameraTest {
 		}
 
 		{
-			Vector3d frontVector = new Vector3d(camera.getFrontVector());
-			Vector3d leftVector = new Vector3d(camera.getLeftVector());
-			Vector3d upVector = new Vector3d(camera.getUpVector());
+			Vector3d frontVector = new Vector3d(1, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 1, 0);
+			Vector3d upVector = new Vector3d(0, 0, 1);
+			camera.setOrientation(frontVector, upVector);
 			Vector3d temp = frontVector;
 			frontVector = leftVector;
 			leftVector = temp;

@@ -185,26 +185,25 @@ public class Client extends Applet {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				Dimension screenSize = Toolkit.getDefaultToolkit()
-						.getScreenSize();
-				int originX = screenSize.width / 2;
-				int originY = screenSize.height / 2;
-				int newX = e.getXOnScreen();
-				int newY = e.getYOnScreen();
+				Dimension windowSize = ((Canvas3D) e.getSource()).getSize();
+				int originX = windowSize.width / 2;
+				int originY = windowSize.height / 2;
+				int newX = e.getX();
+				int newY = e.getY();
 
 				if (newX == originX && newY == originY) {
 					return;
 				}
 
 				int deltaX = newX - originX;
-				int deltaY = originY - newY;
-				MouseUtil.setPositionOnScreen(originX, originY);
+				int deltaY = newY - originY;
+				MouseUtil.setPositionOnScreen(e.getXOnScreen() - deltaX, e.getYOnScreen() - deltaY);
 
 				if (deltaX != 0) {
-					camera.lookLeft(-deltaX * ANGLE_SPEED);
+					camera.lookRight(deltaX * ANGLE_SPEED);
 				}
 				if (deltaY != 0) {
-					camera.lookUp(deltaY * ANGLE_SPEED);
+					camera.lookDown(deltaY * ANGLE_SPEED);
 				}
 			}
 

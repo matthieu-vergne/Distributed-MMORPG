@@ -380,7 +380,30 @@ public class CameraTest {
 
 	@Test
 	public void testSetOrientation() {
-		// TODO
+		Camera camera = new Camera();
+
+		{
+			Vector3d frontVector = new Vector3d(1, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 1, 0);
+			Vector3d upVector = new Vector3d(0, 0, 1);
+			camera.setOrientation(frontVector, upVector);
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+		}
+
+		{
+			Vector3d frontVector = new Vector3d(2, 0, 0);
+			Vector3d leftVector = new Vector3d(0, 3, 0);
+			Vector3d upVector = new Vector3d(0, 0, 4);
+			camera.setOrientation(frontVector, upVector);
+			frontVector.normalize();
+			leftVector.normalize();
+			upVector.normalize();
+			assertTupleEquals(frontVector, camera.getFrontVector());
+			assertTupleEquals(upVector, camera.getUpVector());
+			assertTupleEquals(leftVector, camera.getLeftVector());
+		}
 	}
 
 	@Test

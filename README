@@ -2,7 +2,7 @@ DMMORPG
 (Distributed Massively Multiplayer Online Role Playing Game)
 
 
-I - WHAT IS THIS PROJECT ?
+I - WHAT IS THIS PROJECT?
 
 
 This project focuses on the possibility to obtain a completely distributed
@@ -10,7 +10,7 @@ MMORPG. By "completely" I mean there is absolutely no centralized server,
 including any authority nor database.
 
 
-II - WHAT IS NOT THIS PROJECT ?
+II - WHAT IS NOT THIS PROJECT?
 
 
 In order to make it clear, this project is not an implementation of a basic
@@ -34,16 +34,16 @@ of mobs to kill ! I will make a team for the next weak in order to go farm
 there." as this place can be absent the next week (and possibly never come back).
 
 
-III - WHAT ARE THE FINAL OBJECTIVES ?
+III - WHAT ARE THE FINAL OBJECTIVES?
 
 
 At the end, a complete game must "emerge" from the network. If no people run the
 client the game is stopped (does not run at all), but from the first launched
-client the game must be ready to play. The available world depends to the
-connected client, as each one have a part of it. This world always evoluate
-relatively to connected clients.
+client the game must be ready to play. The available world depends on the
+connected client, as each one have a part of it. This world always evolve
+regarding the connected clients.
 
-As the responsability of this world is delegated to the users having it, there
+As the responsibility of this world is delegated to the users having it, there
 can be some problems with not stable clients or players who come rarely (their
 part of the world is never available). We can imagine to not allow big parts
 of the world in such rare resources (it is also a better choice to save the
@@ -53,7 +53,7 @@ part of the world (make redundant data), but this is an advanced study which is
 not a priority yet. For the beginning we can just do with available clients.
 
 
-IV - WHAT KIND OF MMORPG ?
+IV - WHAT KIND OF MMORPG?
 
 
 Sincerely this question stay opened, as there is no exact idea to what will be
@@ -70,7 +70,7 @@ process which can be recursive (use raw materials to make more complex
 materials, use them to make tools, ...). We can imagine create until a
 complete planet like this. Anyway this is a basic way in order to have a
 possible evolution of the world, done by the actions of each player. When a
-player disconnects, all the object he has make go with him and disappear from
+player disconnects, all the object he has made go with him and disappear from
 the universe (well, the reason why is a question of scenario {^_°}).
 
 We can imagine something different than a space context, for example to be in
@@ -80,7 +80,7 @@ them. This is the principal characteristics which allows to have a completely
 distributed world.
 
 
-V - IS THERE FINANCIAL OBJECTIVES IN THIS PROJECT ?
+V - IS THERE FINANCIAL OBJECTIVES IN THIS PROJECT?
 
 
 Absolutely not... but if I say it like that you will think there is, no ? {^_°}
@@ -90,7 +90,7 @@ financial incomings if they are not possible for any player. I mean that if I
 can expect to earn some money from what I can sell in the game (products or
 services), anyone can do. If I expect to earn some money from what I can sell
 out of the game (but for it), any one can do it, as there is no difference
-between anyone : the principal objective being to have a completely distributed
+between anyone: the principal objective being to have a completely distributed
 system, it means to have a completely distributed authority (or no authority if
 you prefer), so any one is at the same level and can do the same thing.
 

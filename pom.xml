@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.matthieu-vergne</groupId>
+	<artifactId>dmmorpg</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>DMMORPG</name>
+	<description>Entirely decentralized MMORPG framework.</description>
+	<inceptionYear>2014</inceptionYear>
+	<url>https://github.com/matthieu-vergne/Distributed-MMORPG</url>
+	
+	<modules>
+		<module>dmmorpg-framework</module>
+		<module>dmmorpg-sample</module>
+	</modules>
+
+	<scm>
+		<connection>scm:git:git://github.com/matthieu-vergne/Distributed-MMORPG.git</connection>
+		<developerConnection>scm:git:git://github.com/matthieu-vergne/Distributed-MMORPG.git</developerConnection>
+		<url>scm:git:git://github.com/matthieu-vergne/Distributed-MMORPG.git</url>
+	</scm>
+	
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/matthieu-vergne/Distributed-MMORPG/issues/</url>
+	</issueManagement>
+	
+	<licenses>
+		<license>
+			<name>CC0</name>
+			<url>http://creativecommons.org/publicdomain/zero/1.0/</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<name>Matthieu Vergne</name>
+			<email>matthieu_DOT_vergne@(nospam)gmail_DOT_com</email>
+			<url>https://github.com/matthieu-vergne</url>
+		</developer>
+	</developers>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-snapshot</id>
+			<name>Sonatype Snapshot</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-release</id>
+			<name>Sonatype Release</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+</project>

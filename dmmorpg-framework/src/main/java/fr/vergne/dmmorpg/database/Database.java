@@ -8,7 +8,9 @@ package fr.vergne.dmmorpg.database;
  * 
  * @param <Key>
  *            The type of key to use to identify the data
+ * @deprecated use {@link DataManager} instead
  */
+@Deprecated
 public interface Database<Key> {
 
 	/**

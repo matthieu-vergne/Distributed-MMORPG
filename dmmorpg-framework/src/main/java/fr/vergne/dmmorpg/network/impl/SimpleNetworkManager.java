@@ -42,6 +42,7 @@ public class SimpleNetworkManager implements NetworkManager {
 			throw new RuntimeException(e);
 		}
 
+		threadPool = Executors.newCachedThreadPool();
 		try {
 			listeningSocket = new ServerSocket();
 			listeningSocket.setReuseAddress(true);
@@ -143,8 +144,6 @@ public class SimpleNetworkManager implements NetworkManager {
 		});
 		listeningThread.setDaemon(true);
 		listeningThread.start();
-
-		threadPool = Executors.newCachedThreadPool();
 	}
 
 	public void stop() {

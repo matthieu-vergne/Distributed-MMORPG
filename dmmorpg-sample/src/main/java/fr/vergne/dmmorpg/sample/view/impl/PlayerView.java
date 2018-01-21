@@ -7,23 +7,23 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import fr.vergne.dmmorpg.Updatable;
+import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.View;
 import fr.vergne.dmmorpg.sample.world.World;
-import fr.vergne.dmmorpg.sample.world.WorldPosition;
 import fr.vergne.dmmorpg.sample.world.WorldUpdate;
 
-public class PositionedView implements View<Graphics> {
+public class PlayerView implements View<Graphics> {
 
 	private final World world;
-	private final WorldPosition center;
+	private final Player player;
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
-	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
+	private final Listener<? super WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
 	private final Scaler scaler = new Scaler();
 
-	public PositionedView(World world, WorldPosition center) {
+	public PlayerView(World world, Player player) {
 		this.world = world;
 		this.world.listenUpdate(updateListener);
-		this.center = center;
+		this.player = player;
 		this.scaler.listenUpdate(updateListener);
 	}
 
@@ -33,17 +33,17 @@ public class PositionedView implements View<Graphics> {
 		super.finalize();
 	}
 
-	@Override
-	public void render(Graphics g) {
-		new Renderer().render(g, scaler.getScale(), world, center);
-	}
-
 	public void increaseScale() {
 		scaler.increaseScale();
 	}
 
 	public void decreaseScale() {
 		scaler.decreaseScale();
+	}
+
+	@Override
+	public void render(Graphics g) {
+		new Renderer().render(g, scaler.getScale(), world, world.getPosition(player));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class PositionedView implements View<Graphics> {
 	public String toString() {
 		Map<String, Object> data = new LinkedHashMap<>();
 		data.put("world", world);
-		data.put("center", center);
+		data.put("player", player);
 		return "View" + data;
 	}
 }

@@ -3,10 +3,10 @@ package fr.vergne.dmmorpg.sample.world;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import fr.vergne.dmmorpg.impl.BasicUpdate;
+import fr.vergne.dmmorpg.impl.FinalUpdate;
 import fr.vergne.dmmorpg.sample.Property;
 
-public class WorldUpdate extends BasicUpdate<Object, Property, Object> {
+public class WorldUpdate extends FinalUpdate<Object, Property, Object> {
 
 	public WorldUpdate(Object source, Property property, Object oldValue, Object newValue) {
 		super(source, property, oldValue, newValue);

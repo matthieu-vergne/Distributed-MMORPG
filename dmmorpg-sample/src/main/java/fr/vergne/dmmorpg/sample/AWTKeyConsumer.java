@@ -1,8 +1,8 @@
-package fr.vergne.dmmorpg.impl;
+package fr.vergne.dmmorpg.sample;
 
 import java.awt.event.KeyEvent;
 
-import fr.vergne.dmmorpg.KeyConsumer;
+import fr.vergne.dmmorpg.impl.KeyConsumer;
 
 public class AWTKeyConsumer extends KeyConsumer<KeyEvent> {
 

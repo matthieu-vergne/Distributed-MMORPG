@@ -32,61 +32,6 @@ public class ViewComponent extends Component {
 		this.world = world;
 		this.world.listenUpdate(viewListener);
 		this.cellRenderer = cellRenderer;
-
-		// addMouseListener(new MouseListener() {
-		//
-		// @Override
-		// public void mouseClicked(MouseEvent e) {
-		// System.out.println("mouse clicked: (" + e.getX() + "," + e.getY() + ")");
-		// }
-		//
-		// @Override
-		// public void mouseReleased(MouseEvent e) {
-		// // Not used
-		// }
-		//
-		// @Override
-		// public void mousePressed(MouseEvent e) {
-		// // Not used
-		// }
-		//
-		// @Override
-		// public void mouseExited(MouseEvent e) {
-		// // Not used
-		// }
-		//
-		// @Override
-		// public void mouseEntered(MouseEvent e) {
-		// // Not used
-		// }
-		// });
-		// addMouseMotionListener(new MouseMotionListener() {
-		//
-		// @Override
-		// public void mouseMoved(MouseEvent e) {
-		// System.out.println("mouse moved: (" + e.getX() + "," + e.getY() + ")");
-		// }
-		//
-		// @Override
-		// public void mouseDragged(MouseEvent e) {
-		// System.out.println("mouse dragged: (" + e.getX() + "," + e.getY() + ")");
-		// }
-		// });
-		// addMouseWheelListener(new MouseWheelListener() {
-		//
-		// @Override
-		// public void mouseWheelMoved(MouseWheelEvent e) {
-		// System.out.println("mouse wheel moved: " + e.getWheelRotation());
-		// }
-		// });
-		// addPropertyChangeListener(new PropertyChangeListener() {
-		//
-		// @Override
-		// public void propertyChange(PropertyChangeEvent evt) {
-		// System.out.println("property changed: " + evt.getPropertyName() + "=" +
-		// evt.getNewValue());
-		// }
-		// });
 	}
 
 	@Override

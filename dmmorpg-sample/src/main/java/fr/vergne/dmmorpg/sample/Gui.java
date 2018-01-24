@@ -1,6 +1,6 @@
 package fr.vergne.dmmorpg.sample;
 
-import static fr.vergne.dmmorpg.impl.AWTKeyConsumer.*;
+import static fr.vergne.dmmorpg.sample.AWTKeyConsumer.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 
-import fr.vergne.dmmorpg.impl.AWTKeyConsumer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
 import fr.vergne.dmmorpg.sample.view.impl.Scaler;

@@ -1,4 +1,4 @@
-package fr.vergne.dmmorpg;
+package fr.vergne.dmmorpg.impl;
 
 import java.util.HashMap;
 import java.util.Map;

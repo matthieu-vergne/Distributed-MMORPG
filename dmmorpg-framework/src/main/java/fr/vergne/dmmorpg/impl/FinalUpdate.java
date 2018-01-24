@@ -2,14 +2,14 @@ package fr.vergne.dmmorpg.impl;
 
 import fr.vergne.dmmorpg.Updatable.Update;
 
-public class BasicUpdate<Source, Property, Value> implements Update<Source, Property, Value> {
+public class FinalUpdate<Source, Property, Value> implements Update<Source, Property, Value> {
 
 	private final Source source;
 	private final Property property;
 	private final Value oldValue;
 	private final Value newValue;
 
-	public BasicUpdate(Source source, Property property, Value oldValue, Value newValue) {
+	public FinalUpdate(Source source, Property property, Value oldValue, Value newValue) {
 		this.source = source;
 		this.property = property;
 		this.oldValue = oldValue;

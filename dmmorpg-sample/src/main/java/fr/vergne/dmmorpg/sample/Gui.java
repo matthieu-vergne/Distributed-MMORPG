@@ -14,33 +14,35 @@ import javax.swing.JFrame;
 import fr.vergne.dmmorpg.impl.AWTKeyConsumer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
+import fr.vergne.dmmorpg.sample.view.impl.Scaler;
+import fr.vergne.dmmorpg.sample.view.impl.renderer.CellRenderer;
 import fr.vergne.dmmorpg.sample.world.World;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
 
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
 
-	private final PlayerView worldView;
-
 	public Gui() {
+		World world = new World();
+		Scaler scaler = new Scaler(32, 32);
+		Player player = new Player('A', Color.RED);
+		world.add(player, new WorldPosition(0, 0));
+		PlayerView worldView = new PlayerView(player, scaler);
+
 		setTitle("DMMORPG");
+		setMinimumSize(new Dimension(64, 64));
 		setPreferredSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new GridLayout(1, 1));
-		ViewComponent worldViewComponent = new ViewComponent();
+		ViewComponent worldViewComponent = new ViewComponent(world, worldView, new CellRenderer());
+		scaler.listenUpdate(u -> worldViewComponent.requestRepaint());
 		getContentPane().add(worldViewComponent);
 
-		World world = new World();
-		Player player = new Player('A', Color.RED);
-		world.add(player, new WorldPosition(0, 0));
-		worldView = new PlayerView(world, player);
-		worldViewComponent.setView(worldView);
-
-		configureKeyboard(world, player);
+		configureKeyboard(world, player, scaler);
 		pack();
 	}
 
-	private void configureKeyboard(World world, Player player) {
+	private void configureKeyboard(World world, Player player, Scaler scaler) {
 		// TODO Similarly make a MouseConsumer
 		KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		AWTKeyConsumer consumer = new AWTKeyConsumer();
@@ -48,8 +50,8 @@ public class Gui extends JFrame {
 		consumer.addConsumer(whenKeyPressed(KeyEvent.VK_RIGHT), event -> world.actTowards(player, Direction.RIGHT));
 		consumer.addConsumer(whenKeyPressed(KeyEvent.VK_UP), event -> world.actTowards(player, Direction.TOP));
 		consumer.addConsumer(whenKeyPressed(KeyEvent.VK_DOWN), event -> world.actTowards(player, Direction.BOTTOM));
-		consumer.addConsumer(whenCharTyped('+'), event -> worldView.increaseScale());
-		consumer.addConsumer(whenCharTyped('-'), event -> worldView.decreaseScale());
+		consumer.addConsumer(whenCharTyped('+'), event -> scaler.increaseScale());
+		consumer.addConsumer(whenCharTyped('-'), event -> scaler.decreaseScale());
 		focusManager.addKeyEventDispatcher(new KeyEventDispatcher() {
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent event) {

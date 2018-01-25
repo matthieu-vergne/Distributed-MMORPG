@@ -13,14 +13,15 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
+import fr.vergne.dmmorpg.Renderer;
 import fr.vergne.dmmorpg.impl.RendererComposer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
 import fr.vergne.dmmorpg.sample.view.impl.Scaler;
-import fr.vergne.dmmorpg.sample.view.impl.renderer.CellRenderer;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.Filler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.PlayerRenderer;
 import fr.vergne.dmmorpg.sample.world.World;
+import fr.vergne.dmmorpg.sample.world.WorldCell;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
 import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone;
@@ -49,14 +50,18 @@ public class Gui extends JFrame {
 		PlayerView worldView = new PlayerView(player, scaler);
 		configureKeyboard(world, player, scaler);
 
-		CellRenderer cellRenderer;
+		Renderer<WorldCell, Graphics> cellRenderer;
 		{
 			RendererComposer<Graphics> builder = new RendererComposer<>();
 			builder.set(water, new Filler<>(Color.BLUE));
 			builder.set(earth, new Filler<>(Color.ORANGE));
 			builder.set(snow, new Filler<>(Color.WHITE));
 			builder.set(player, new PlayerRenderer(new File("res/avatar.png")));
-			cellRenderer = new CellRenderer(builder.build());
+			Renderer<Object, Graphics> renderer = builder.build();
+			cellRenderer = (cell, graphics) -> {
+				renderer.render(cell.getZoneDescriptor(), graphics);
+				cell.getPlayers().forEach(p -> renderer.render(p, graphics));
+			};
 		}
 		ViewComponent worldViewComponent = new ViewComponent(world, worldView, cellRenderer);
 		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());

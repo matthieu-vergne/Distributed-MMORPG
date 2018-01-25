@@ -13,7 +13,6 @@ import java.io.File;
 
 import javax.swing.JFrame;
 
-import fr.vergne.dmmorpg.Renderer;
 import fr.vergne.dmmorpg.impl.RendererComposer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;

@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -55,7 +56,7 @@ public class Gui extends JFrame {
 			builder.set(water, new Filler<>(Color.BLUE));
 			builder.set(earth, new Filler<>(Color.ORANGE));
 			builder.set(snow, new Filler<>(Color.WHITE));
-			builder.set(player, new PlayerRenderer());
+			builder.set(player, new PlayerRenderer(new File("res/avatar.png")));
 			cellRenderer = new CellRenderer(builder.build());
 		}
 

@@ -14,11 +14,17 @@ import fr.vergne.dmmorpg.sample.player.Player;
 
 public class PlayerRenderer implements Renderer<Player, Graphics> {
 
+	private final File file;
+
+	public PlayerRenderer(File file) {
+		this.file = file;
+	}
+
 	@Override
 	public void render(Player player, Graphics g) {
 		BufferedImage image;
 		try {
-			image = ImageIO.read(new File("res/avatar.png"));
+			image = ImageIO.read(file);
 		} catch (IOException cause) {
 			cause.printStackTrace();
 			return;

@@ -1,5 +1,6 @@
 package fr.vergne.dmmorpg.sample.zone.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,9 @@ public class ZoneBuilder {
 	}
 
 	public Zone build() {
+		Descriptor defaultZone = this.defaultZone;
+		List<Delimiter> layers = new ArrayList<>(this.layers);
+		Map<Delimiter, Descriptor> zones = new HashMap<>(this.zones);
 		return new Zone() {
 
 			@Override

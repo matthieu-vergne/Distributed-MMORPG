@@ -23,8 +23,8 @@ public class ViewComponent extends Component {
 	private final World world;
 	private final View<World, WorldCell, Graphics, Rectangle> view;
 	private final Renderer<WorldCell, Graphics> cellRenderer;
-	private boolean toRepaint = false;
-	private final Listener<WorldUpdate> viewListener = update -> requestRepaint();
+	private boolean isRepaintFired = false;
+	private final Listener<WorldUpdate> viewListener = update -> fireRepaint();
 
 	public ViewComponent(World world, View<World, WorldCell, Graphics, Rectangle> view,
 			Renderer<WorldCell, Graphics> cellRenderer) {
@@ -55,12 +55,12 @@ public class ViewComponent extends Component {
 		}
 	}
 
-	public void requestRepaint() {
-		if (!toRepaint) {
-			toRepaint = true;
+	public void fireRepaint() {
+		if (!isRepaintFired) {
+			isRepaintFired = true;
 			SwingUtilities.invokeLater(() -> {
 				repaint();
-				toRepaint = false;
+				isRepaintFired = false;
 			});
 		} else {
 			// Repaint already requested

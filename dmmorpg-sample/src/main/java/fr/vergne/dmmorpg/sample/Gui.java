@@ -34,7 +34,7 @@ public class Gui extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new GridLayout(1, 1));
 		ViewComponent worldViewComponent = new ViewComponent(world, worldView, new CellRenderer());
-		scaler.listenUpdate(u -> worldViewComponent.requestRepaint());
+		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());
 		getContentPane().add(worldViewComponent);
 
 		configureKeyboard(world, player, scaler);

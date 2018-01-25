@@ -22,11 +22,14 @@ public class Gui extends JFrame {
 
 	public Gui() {
 		World world = new World();
-		Scaler scaler = new Scaler(32, 32);
 		Player player = new Player();
 		world.add(player, new WorldPosition(0, 0));
+		
+		Scaler scaler = new Scaler(32, 32);
 		PlayerView worldView = new PlayerView(player, scaler);
 
+		configureKeyboard(world, player, scaler);
+		
 		setTitle("DMMORPG");
 		setMinimumSize(new Dimension(64, 64));
 		setPreferredSize(new Dimension(800, 600));
@@ -35,8 +38,6 @@ public class Gui extends JFrame {
 		ViewComponent worldViewComponent = new ViewComponent(world, worldView, new CellRenderer());
 		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());
 		getContentPane().add(worldViewComponent);
-
-		configureKeyboard(world, player, scaler);
 		pack();
 	}
 

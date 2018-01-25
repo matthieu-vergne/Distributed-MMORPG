@@ -20,9 +20,9 @@ import fr.vergne.dmmorpg.sample.view.impl.Scaler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.CellRenderer;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.Filler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.PlayerRenderer;
-import fr.vergne.dmmorpg.sample.world.AccessPolicy;
 import fr.vergne.dmmorpg.sample.world.World;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
+import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone;
 import fr.vergne.dmmorpg.sample.zone.impl.StaticZoneDescriptor;
 import fr.vergne.dmmorpg.sample.zone.impl.ZoneBuilder;
@@ -58,14 +58,14 @@ public class Gui extends JFrame {
 			builder.set(player, new PlayerRenderer(new File("res/avatar.png")));
 			cellRenderer = new CellRenderer(builder.build());
 		}
+		ViewComponent worldViewComponent = new ViewComponent(world, worldView, cellRenderer);
+		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());
 
 		setTitle("DMMORPG");
 		setMinimumSize(new Dimension(64, 64));
 		setPreferredSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new GridLayout(1, 1));
-		ViewComponent worldViewComponent = new ViewComponent(world, worldView, cellRenderer);
-		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());
 		getContentPane().add(worldViewComponent);
 		pack();
 	}

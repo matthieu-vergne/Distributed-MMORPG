@@ -1,6 +1,6 @@
 package fr.vergne.dmmorpg.sample.zone.impl;
 
-import fr.vergne.dmmorpg.sample.world.AccessPolicy;
+import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone.Descriptor;
 
 public class StaticZoneDescriptor implements Descriptor {

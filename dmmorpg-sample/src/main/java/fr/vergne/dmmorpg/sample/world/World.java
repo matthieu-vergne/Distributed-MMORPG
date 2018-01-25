@@ -7,6 +7,7 @@ import java.util.Objects;
 import fr.vergne.dmmorpg.Updatable;
 import fr.vergne.dmmorpg.sample.Direction;
 import fr.vergne.dmmorpg.sample.player.Player;
+import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone;
 import fr.vergne.dmmorpg.sample.zone.Zone.Descriptor;
 

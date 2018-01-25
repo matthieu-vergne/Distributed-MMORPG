@@ -7,15 +7,22 @@ import java.util.Objects;
 import fr.vergne.dmmorpg.Updatable;
 import fr.vergne.dmmorpg.sample.Direction;
 import fr.vergne.dmmorpg.sample.player.Player;
+import fr.vergne.dmmorpg.sample.zone.Zone;
+import fr.vergne.dmmorpg.sample.zone.Zone.Descriptor;
 
 public class World implements Updatable<WorldUpdate> {
 
 	private final WorldMap<Player> playerMap = new WorldMap<>();
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
 	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
+	private Zone ground;
 
 	public World() {
 		playerMap.listenUpdate(updateListener);
+	}
+
+	public void setGround(Zone ground) {
+		this.ground = ground;
 	}
 
 	public void add(Player player, WorldPosition position) {
@@ -54,10 +61,9 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	private boolean canMove(Player player, WorldPosition position, Direction direction) {
-		WorldCell c1 = getCell(position);
-		WorldCell c2 = getCell(position.move(direction));
-		return c1.getPlayerAccessPolicy().canLeave(player, direction.opposite())
-				&& c2.getPlayerAccessPolicy().canEnter(player, direction);
+		AccessPolicy<? super Player> p1 = getCell(position).getZoneDescriptor().getAccessPolicy(player);
+		AccessPolicy<? super Player> p2 = getCell(position.move(direction)).getZoneDescriptor().getAccessPolicy(player);
+		return p1.canLeave(player, direction.opposite()) && p2.canEnter(player, direction);
 	}
 
 	public WorldPosition getPosition(Player player) {
@@ -65,16 +71,9 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	public WorldCell getCell(WorldPosition position) {
-		long x = position.getX();
-		long y = position.getY();
+		Descriptor descriptor = ground.getDescriptor(position);
 		Collection<Player> players = playerMap.getAllAt(position);
-		if (-3 < x && x < 3 && -2 < y && y < 2) {
-			return new WorldCell(Ground.SNOW, players, AccessPolicy.ALLOW_ALL);
-		} else if (-10 < x && x < 10 && -10 < y && y < 10) {
-			return new WorldCell(Ground.EARTH, players, AccessPolicy.ALLOW_ALL);
-		} else {
-			return new WorldCell(Ground.WATER, players, AccessPolicy.BLOCK_ALL);
-		}
+		return new WorldCell(descriptor, players);
 	}
 
 	@Override

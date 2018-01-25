@@ -2,7 +2,9 @@ package fr.vergne.dmmorpg.sample;
 
 import static fr.vergne.dmmorpg.sample.AWTKeyConsumer.*;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -10,12 +12,19 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 
+import fr.vergne.dmmorpg.Renderer;
+import fr.vergne.dmmorpg.impl.RendererComposer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
 import fr.vergne.dmmorpg.sample.view.impl.Scaler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.CellRenderer;
+import fr.vergne.dmmorpg.sample.view.impl.renderer.Filler;
+import fr.vergne.dmmorpg.sample.world.AccessPolicy;
 import fr.vergne.dmmorpg.sample.world.World;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
+import fr.vergne.dmmorpg.sample.zone.Zone;
+import fr.vergne.dmmorpg.sample.zone.impl.StaticZoneDescriptor;
+import fr.vergne.dmmorpg.sample.zone.impl.ZoneBuilder;
 
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
@@ -24,18 +33,36 @@ public class Gui extends JFrame {
 		World world = new World();
 		Player player = new Player();
 		world.add(player, new WorldPosition(0, 0));
-		
+		Zone.Descriptor water = new StaticZoneDescriptor(AccessPolicy.BLOCK_ALL);
+		Zone.Descriptor earth = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
+		Zone.Descriptor snow = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
+		{
+			ZoneBuilder builder = new ZoneBuilder();
+			builder.setDefault(water);
+			builder.add(earth, p -> -10 < p.getX() && p.getX() < 10 && -10 < p.getY() && p.getY() < 10);
+			builder.add(snow, p -> -3 < p.getX() && p.getX() < 3 && -2 < p.getY() && p.getY() < 2);
+			world.setGround(builder.build());
+		}
+
 		Scaler scaler = new Scaler(32, 32);
 		PlayerView worldView = new PlayerView(player, scaler);
-
 		configureKeyboard(world, player, scaler);
-		
+
+		CellRenderer cellRenderer;
+		{
+			RendererComposer<Graphics> builder = new RendererComposer<>();
+			builder.set(water, new Filler<>(Color.BLUE));
+			builder.set(earth, new Filler<>(Color.ORANGE));
+			builder.set(snow, new Filler<>(Color.WHITE));
+			cellRenderer = new CellRenderer(builder.build());
+		}
+
 		setTitle("DMMORPG");
 		setMinimumSize(new Dimension(64, 64));
 		setPreferredSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new GridLayout(1, 1));
-		ViewComponent worldViewComponent = new ViewComponent(world, worldView, new CellRenderer());
+		ViewComponent worldViewComponent = new ViewComponent(world, worldView, cellRenderer);
 		scaler.listenUpdate(u -> worldViewComponent.fireRepaint());
 		getContentPane().add(worldViewComponent);
 		pack();

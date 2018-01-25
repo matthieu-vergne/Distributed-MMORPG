@@ -19,6 +19,7 @@ import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
 import fr.vergne.dmmorpg.sample.view.impl.Scaler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.CellRenderer;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.Filler;
+import fr.vergne.dmmorpg.sample.view.impl.renderer.PlayerRenderer;
 import fr.vergne.dmmorpg.sample.world.AccessPolicy;
 import fr.vergne.dmmorpg.sample.world.World;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
@@ -54,6 +55,7 @@ public class Gui extends JFrame {
 			builder.set(water, new Filler<>(Color.BLUE));
 			builder.set(earth, new Filler<>(Color.ORANGE));
 			builder.set(snow, new Filler<>(Color.WHITE));
+			builder.set(player, new PlayerRenderer());
 			cellRenderer = new CellRenderer(builder.build());
 		}
 

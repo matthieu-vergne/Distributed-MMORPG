@@ -14,7 +14,6 @@ public class CellRenderer implements Renderer<WorldCell, Graphics> {
 	public CellRenderer(Renderer<Object, Graphics> renderer) {
 		this.renderer = renderer;
 	}
-	private final Renderer<Player, Graphics> playerRenderer = new PlayerRenderer();
 
 	@Override
 	public void render(WorldCell cell, Graphics g) {
@@ -22,7 +21,7 @@ public class CellRenderer implements Renderer<WorldCell, Graphics> {
 
 		Collection<Player> players = cell.getPlayers();
 		for (Player player : players) {
-			playerRenderer.render(player, g);
+			renderer.render(player, g);
 		}
 	}
 }

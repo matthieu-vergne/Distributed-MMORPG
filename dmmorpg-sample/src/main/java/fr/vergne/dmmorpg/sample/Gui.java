@@ -2,7 +2,6 @@ package fr.vergne.dmmorpg.sample;
 
 import static fr.vergne.dmmorpg.sample.AWTKeyConsumer.*;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.KeyEventDispatcher;
@@ -24,7 +23,7 @@ public class Gui extends JFrame {
 	public Gui() {
 		World world = new World();
 		Scaler scaler = new Scaler(32, 32);
-		Player player = new Player('A', Color.RED);
+		Player player = new Player();
 		world.add(player, new WorldPosition(0, 0));
 		PlayerView worldView = new PlayerView(player, scaler);
 

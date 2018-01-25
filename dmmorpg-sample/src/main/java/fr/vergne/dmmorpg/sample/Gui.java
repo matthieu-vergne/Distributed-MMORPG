@@ -33,8 +33,6 @@ public class Gui extends JFrame {
 
 	public Gui() {
 		World world = new World();
-		Player player = new Player();
-		world.add(player, new WorldPosition(0, 0));
 		Zone.Descriptor water = new StaticZoneDescriptor(AccessPolicy.BLOCK_ALL);
 		Zone.Descriptor earth = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
 		Zone.Descriptor snow = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
@@ -45,6 +43,8 @@ public class Gui extends JFrame {
 			builder.add(snow, p -> -3 < p.getX() && p.getX() < 3 && -2 < p.getY() && p.getY() < 2);
 			world.setGround(builder.build());
 		}
+		Player player = new Player();
+		world.add(player, new WorldPosition(0, 0));
 
 		Scaler scaler = new Scaler(32, 32);
 		PlayerView worldView = new PlayerView(player, scaler);

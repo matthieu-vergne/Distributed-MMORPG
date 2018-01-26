@@ -20,6 +20,10 @@ public class ComposedRenderer<Graphics> implements Renderer<Object, Graphics> {
 
 	@Override
 	public void render(Object t, Graphics graphics) {
-		getRenderer(t).render(t, graphics);
+		if (t == null) {
+			// Nothing to render
+		} else {
+			getRenderer(t).render(t, graphics);
+		}
 	}
 }

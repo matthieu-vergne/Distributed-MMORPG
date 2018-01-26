@@ -15,29 +15,17 @@ public class World implements Updatable<WorldUpdate> {
 	private final WorldMap<Player> playerMap = new WorldMap<>();
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
 	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
-	private Zone ground;
-	private Zone trees;
-	private AccessPolicy<Object> enterPolicy;
-	private AccessPolicy<Object> leavePolicy;
+	private final Zone ground;
+	private final Zone trees;
+	private final AccessPolicy<Object> enterPolicy;
+	private final AccessPolicy<Object> leavePolicy;
 
-	public World() {
-		playerMap.listenUpdate(updateListener);
-	}
-
-	public void setGround(Zone ground) {
+	public World(Zone ground, Zone trees, AccessPolicy<Object> enterPolicy, AccessPolicy<Object> leavePolicy) {
+		this.playerMap.listenUpdate(updateListener);
 		this.ground = ground;
-	}
-
-	public void setTrees(Zone trees) {
 		this.trees = trees;
-	}
-
-	public void setEnterAccessPolicy(AccessPolicy<Object> accessPolicy) {
-		this.enterPolicy = accessPolicy;
-	}
-
-	public void setLeaveAccessPolicy(AccessPolicy<Object> accessPolicy) {
-		this.leavePolicy = accessPolicy;
+		this.enterPolicy = enterPolicy;
+		this.leavePolicy = leavePolicy;
 	}
 
 	public void add(Player player, WorldPosition position) {

@@ -21,6 +21,7 @@ import fr.vergne.dmmorpg.sample.view.impl.Scaler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.Filler;
 import fr.vergne.dmmorpg.sample.view.impl.renderer.PlayerRenderer;
 import fr.vergne.dmmorpg.sample.world.World;
+import fr.vergne.dmmorpg.sample.world.WorldBuilder;
 import fr.vergne.dmmorpg.sample.world.WorldCell;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
 import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
@@ -31,24 +32,24 @@ import fr.vergne.dmmorpg.sample.zone.impl.ZoneBuilder;
 public class Gui extends JFrame {
 
 	public Gui() {
-		World world = new World();
+		WorldBuilder wBuilder = new WorldBuilder();
 
 		Zone.Type water = new Zone.Type();
 		Zone.Type earth = new Zone.Type();
 		Zone.Type snow = new Zone.Type();
 		{
-			ZoneBuilder builder = new ZoneBuilder();
-			builder.setDefault(water);
-			builder.add(earth, p -> -10 < p.getX() && p.getX() < 10 && -10 < p.getY() && p.getY() < 10);
-			builder.add(snow, p -> -3 < p.getX() && p.getX() < 3 && -2 < p.getY() && p.getY() < 2);
-			world.setGround(builder.build());
+			ZoneBuilder zBuilder = new ZoneBuilder();
+			zBuilder.setDefault(water);
+			zBuilder.add(earth, p -> -10 < p.getX() && p.getX() < 10 && -10 < p.getY() && p.getY() < 10);
+			zBuilder.add(snow, p -> -3 < p.getX() && p.getX() < 3 && -2 < p.getY() && p.getY() < 2);
+			wBuilder.setGround(zBuilder.build());
 		}
 
 		Zone.Type tree = new Zone.Type();
 		{
-			ZoneBuilder builder = new ZoneBuilder();
-			builder.add(tree, p -> p.getX() == -2 && p.getY() == -2);
-			world.setTrees(builder.build());
+			ZoneBuilder zBuilder = new ZoneBuilder();
+			zBuilder.add(tree, p -> p.getX() == -2 && p.getY() == -2);
+			wBuilder.setTrees(zBuilder.build());
 		}
 
 		{
@@ -62,9 +63,11 @@ public class Gui extends JFrame {
 					return true;
 				}
 			};
-			world.setEnterAccessPolicy(accessPolicy);
-			world.setLeaveAccessPolicy(accessPolicy);
+			wBuilder.setEnterAccessPolicy(accessPolicy);
+			wBuilder.setLeaveAccessPolicy(accessPolicy);
 		}
+
+		World world = wBuilder.build();
 
 		Player player = new Player();
 		world.add(player, new WorldPosition(0, 0));

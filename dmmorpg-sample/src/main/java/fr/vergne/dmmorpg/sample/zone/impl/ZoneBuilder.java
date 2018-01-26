@@ -8,21 +8,20 @@ import java.util.Map;
 
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
 import fr.vergne.dmmorpg.sample.zone.Zone;
-import fr.vergne.dmmorpg.sample.zone.Zone.Descriptor;
 
 public class ZoneBuilder {
 
-	private Descriptor defaultZone;
+	private Zone.Type defaultType;
 	private final List<Delimiter> layers = new LinkedList<>();
-	private final Map<Delimiter, Descriptor> zones = new HashMap<>();
+	private final Map<Delimiter, Zone.Type> types = new HashMap<>();
 
-	public void setDefault(Descriptor zone) {
-		this.defaultZone = zone;
+	public void setDefault(Zone.Type type) {
+		this.defaultType = type;
 	}
 
-	public void add(Descriptor zone, Delimiter delimiter) {
+	public void add(Zone.Type type, Delimiter delimiter) {
 		layers.add(0, delimiter);
-		zones.put(delimiter, zone);
+		types.put(delimiter, type);
 	}
 
 	public static interface Delimiter {
@@ -30,21 +29,21 @@ public class ZoneBuilder {
 	}
 
 	public Zone build() {
-		Descriptor defaultZone = this.defaultZone;
+		Zone.Type defaultType = this.defaultType;
 		List<Delimiter> layers = new ArrayList<>(this.layers);
-		Map<Delimiter, Descriptor> zones = new HashMap<>(this.zones);
+		Map<Delimiter, Zone.Type> types = new HashMap<>(this.types);
 		return new Zone() {
 
 			@Override
-			public Descriptor getDescriptor(WorldPosition position) {
+			public Type getType(WorldPosition position) {
 				for (Delimiter delimiter : layers) {
 					if (delimiter.isAt(position)) {
-						return zones.get(delimiter);
+						return types.get(delimiter);
 					} else {
 						continue;
 					}
 				}
-				return defaultZone;
+				return defaultType;
 			}
 		};
 	}

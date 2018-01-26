@@ -25,7 +25,6 @@ import fr.vergne.dmmorpg.sample.world.WorldCell;
 import fr.vergne.dmmorpg.sample.world.WorldPosition;
 import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone;
-import fr.vergne.dmmorpg.sample.zone.impl.StaticZoneDescriptor;
 import fr.vergne.dmmorpg.sample.zone.impl.ZoneBuilder;
 
 @SuppressWarnings("serial")
@@ -33,9 +32,10 @@ public class Gui extends JFrame {
 
 	public Gui() {
 		World world = new World();
-		Zone.Descriptor water = new StaticZoneDescriptor(AccessPolicy.BLOCK_ALL);
-		Zone.Descriptor earth = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
-		Zone.Descriptor snow = new StaticZoneDescriptor(AccessPolicy.ALLOW_ALL);
+
+		Zone.Type water = new Zone.Type();
+		Zone.Type earth = new Zone.Type();
+		Zone.Type snow = new Zone.Type();
 		{
 			ZoneBuilder builder = new ZoneBuilder();
 			builder.setDefault(water);
@@ -43,6 +43,20 @@ public class Gui extends JFrame {
 			builder.add(snow, p -> -3 < p.getX() && p.getX() < 3 && -2 < p.getY() && p.getY() < 2);
 			world.setGround(builder.build());
 		}
+
+		{
+			AccessPolicy<Object> accessPolicy = (object, position, direction) -> {
+				WorldCell cell = world.getCell(position);
+				if (cell.getGround() == water) {
+					return false;
+				} else {
+					return true;
+				}
+			};
+			world.setEnterAccessPolicy(accessPolicy);
+			world.setLeaveAccessPolicy(accessPolicy);
+		}
+
 		Player player = new Player();
 		world.add(player, new WorldPosition(0, 0));
 

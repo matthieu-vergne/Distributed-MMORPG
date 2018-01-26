@@ -9,7 +9,6 @@ import fr.vergne.dmmorpg.sample.Direction;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.zone.AccessPolicy;
 import fr.vergne.dmmorpg.sample.zone.Zone;
-import fr.vergne.dmmorpg.sample.zone.Zone.Descriptor;
 
 public class World implements Updatable<WorldUpdate> {
 
@@ -17,6 +16,8 @@ public class World implements Updatable<WorldUpdate> {
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
 	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
 	private Zone ground;
+	private AccessPolicy<Object> enterPolicy;
+	private AccessPolicy<Object> leavePolicy;
 
 	public World() {
 		playerMap.listenUpdate(updateListener);
@@ -24,6 +25,14 @@ public class World implements Updatable<WorldUpdate> {
 
 	public void setGround(Zone ground) {
 		this.ground = ground;
+	}
+
+	public void setEnterAccessPolicy(AccessPolicy<Object> accessPolicy) {
+		this.enterPolicy = accessPolicy;
+	}
+
+	public void setLeaveAccessPolicy(AccessPolicy<Object> accessPolicy) {
+		this.leavePolicy = accessPolicy;
 	}
 
 	public void add(Player player, WorldPosition position) {
@@ -62,9 +71,8 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	private boolean canMove(Player player, WorldPosition position, Direction direction) {
-		AccessPolicy<? super Player> p1 = getCell(position).getGround().getAccessPolicy(player);
-		AccessPolicy<? super Player> p2 = getCell(position.move(direction)).getGround().getAccessPolicy(player);
-		return p1.canLeave(player, direction.opposite()) && p2.canEnter(player, direction);
+		return leavePolicy.allow(player, position, direction.opposite())
+				&& enterPolicy.allow(player, position.move(direction), direction);
 	}
 
 	public WorldPosition getPosition(Player player) {
@@ -72,9 +80,7 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	public WorldCell getCell(WorldPosition position) {
-		Descriptor descriptor = ground.getDescriptor(position);
-		Collection<Player> players = playerMap.getAllAt(position);
-		return new WorldCell(descriptor, players);
+		return new WorldCell(ground.getType(position), playerMap.getAllAt(position));
 	}
 
 	@Override

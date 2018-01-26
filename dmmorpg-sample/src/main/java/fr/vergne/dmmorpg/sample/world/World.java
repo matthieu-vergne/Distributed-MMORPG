@@ -16,6 +16,7 @@ public class World implements Updatable<WorldUpdate> {
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
 	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
 	private Zone ground;
+	private Zone trees;
 	private AccessPolicy<Object> enterPolicy;
 	private AccessPolicy<Object> leavePolicy;
 
@@ -25,6 +26,10 @@ public class World implements Updatable<WorldUpdate> {
 
 	public void setGround(Zone ground) {
 		this.ground = ground;
+	}
+
+	public void setTrees(Zone trees) {
+		this.trees = trees;
 	}
 
 	public void setEnterAccessPolicy(AccessPolicy<Object> accessPolicy) {
@@ -80,7 +85,7 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	public WorldCell getCell(WorldPosition position) {
-		return new WorldCell(ground.getType(position), playerMap.getAllAt(position));
+		return new WorldCell(ground.getType(position), trees.getType(position), playerMap.getAllAt(position));
 	}
 
 	@Override

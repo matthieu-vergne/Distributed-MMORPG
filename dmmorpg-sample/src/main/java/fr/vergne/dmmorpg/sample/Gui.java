@@ -44,10 +44,19 @@ public class Gui extends JFrame {
 			world.setGround(builder.build());
 		}
 
+		Zone.Type tree = new Zone.Type();
+		{
+			ZoneBuilder builder = new ZoneBuilder();
+			builder.add(tree, p -> p.getX() == -2 && p.getY() == -2);
+			world.setTrees(builder.build());
+		}
+
 		{
 			AccessPolicy<Object> accessPolicy = (object, position, direction) -> {
 				WorldCell cell = world.getCell(position);
 				if (cell.getGround() == water) {
+					return false;
+				} else if (cell.getTree() == tree) {
 					return false;
 				} else {
 					return true;
@@ -70,9 +79,11 @@ public class Gui extends JFrame {
 			renderer.put(water, new Filler<>(Color.BLUE));
 			renderer.put(earth, new Filler<>(Color.ORANGE));
 			renderer.put(snow, new Filler<>(Color.WHITE));
+			renderer.put(tree, new Filler<>(Color.GREEN));
 			renderer.put(player, new PlayerRenderer(new File("res/avatar.png")));
 			cellRenderer = (cell, graphics) -> {
 				renderer.render(cell.getGround(), graphics);
+				renderer.render(cell.getTree(), graphics);
 				cell.getPlayers().forEach(p -> renderer.render(p, graphics));
 			};
 		}

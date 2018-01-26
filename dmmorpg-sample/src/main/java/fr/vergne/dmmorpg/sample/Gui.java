@@ -53,7 +53,7 @@ public class Gui extends JFrame {
 		}
 
 		{
-			AccessPolicy<Object> accessPolicy = (object, position, direction) -> {
+			AccessPolicy<Object> accessPolicy = (object, world, position, direction) -> {
 				WorldCell cell = world.getCell(position);
 				if (cell.getGround() == water) {
 					return false;

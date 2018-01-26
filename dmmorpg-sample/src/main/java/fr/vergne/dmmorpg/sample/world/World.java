@@ -64,8 +64,8 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	private boolean canMove(Player player, WorldPosition position, Direction direction) {
-		return leavePolicy.allow(player, position, direction.opposite())
-				&& enterPolicy.allow(player, position.move(direction), direction);
+		return leavePolicy.allow(player, this, position, direction.opposite())
+				&& enterPolicy.allow(player, this, position.move(direction), direction);
 	}
 
 	public WorldPosition getPosition(Player player) {

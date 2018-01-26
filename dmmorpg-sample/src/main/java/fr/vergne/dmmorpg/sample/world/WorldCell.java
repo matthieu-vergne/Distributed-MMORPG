@@ -15,7 +15,7 @@ public class WorldCell {
 		this.players = players;
 	}
 
-	public Descriptor getZoneDescriptor() {
+	public Descriptor getGround() {
 		return descriptor;
 	}
 

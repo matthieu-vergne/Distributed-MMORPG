@@ -62,8 +62,8 @@ public class World implements Updatable<WorldUpdate> {
 	}
 
 	private boolean canMove(Player player, WorldPosition position, Direction direction) {
-		AccessPolicy<? super Player> p1 = getCell(position).getZoneDescriptor().getAccessPolicy(player);
-		AccessPolicy<? super Player> p2 = getCell(position.move(direction)).getZoneDescriptor().getAccessPolicy(player);
+		AccessPolicy<? super Player> p1 = getCell(position).getGround().getAccessPolicy(player);
+		AccessPolicy<? super Player> p2 = getCell(position.move(direction)).getGround().getAccessPolicy(player);
 		return p1.canLeave(player, direction.opposite()) && p2.canEnter(player, direction);
 	}
 

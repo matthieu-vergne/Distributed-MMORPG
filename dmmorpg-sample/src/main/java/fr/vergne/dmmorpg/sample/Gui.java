@@ -14,7 +14,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import fr.vergne.dmmorpg.Renderer;
-import fr.vergne.dmmorpg.impl.RendererComposer;
+import fr.vergne.dmmorpg.impl.ComposedRenderer;
 import fr.vergne.dmmorpg.sample.player.Player;
 import fr.vergne.dmmorpg.sample.view.impl.PlayerView;
 import fr.vergne.dmmorpg.sample.view.impl.Scaler;
@@ -52,14 +52,13 @@ public class Gui extends JFrame {
 
 		Renderer<WorldCell, Graphics> cellRenderer;
 		{
-			RendererComposer<Graphics> builder = new RendererComposer<>();
-			builder.set(water, new Filler<>(Color.BLUE));
-			builder.set(earth, new Filler<>(Color.ORANGE));
-			builder.set(snow, new Filler<>(Color.WHITE));
-			builder.set(player, new PlayerRenderer(new File("res/avatar.png")));
-			Renderer<Object, Graphics> renderer = builder.build();
+			ComposedRenderer<Graphics> renderer = new ComposedRenderer<>();
+			renderer.put(water, new Filler<>(Color.BLUE));
+			renderer.put(earth, new Filler<>(Color.ORANGE));
+			renderer.put(snow, new Filler<>(Color.WHITE));
+			renderer.put(player, new PlayerRenderer(new File("res/avatar.png")));
 			cellRenderer = (cell, graphics) -> {
-				renderer.render(cell.getZoneDescriptor(), graphics);
+				renderer.render(cell.getGround(), graphics);
 				cell.getPlayers().forEach(p -> renderer.render(p, graphics));
 			};
 		}

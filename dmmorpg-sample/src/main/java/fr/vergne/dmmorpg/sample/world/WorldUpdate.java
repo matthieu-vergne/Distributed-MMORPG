@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import fr.vergne.dmmorpg.impl.FinalUpdate;
-import fr.vergne.dmmorpg.sample.Property;
+import fr.vergne.dmmorpg.sample.world.action.Property;
 
 public class WorldUpdate extends FinalUpdate<Object, Property, Object> {
 

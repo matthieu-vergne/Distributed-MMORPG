@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 import fr.vergne.dmmorpg.Updatable;
 import fr.vergne.dmmorpg.sample.Direction;
-import fr.vergne.dmmorpg.sample.Property;
 import fr.vergne.dmmorpg.sample.world.WorldUpdate;
+import fr.vergne.dmmorpg.sample.world.action.Property;
 
 public class Player implements Updatable<WorldUpdate> {
 

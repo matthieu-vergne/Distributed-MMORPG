@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import fr.vergne.dmmorpg.Updatable;
-import fr.vergne.dmmorpg.sample.Property;
 import fr.vergne.dmmorpg.sample.world.WorldUpdate;
+import fr.vergne.dmmorpg.sample.world.action.Property;
 
 public class Scaler implements Updatable<WorldUpdate> {
 	private final int minWidth;

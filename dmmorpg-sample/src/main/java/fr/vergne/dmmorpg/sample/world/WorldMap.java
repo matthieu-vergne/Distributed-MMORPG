@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import fr.vergne.dmmorpg.Updatable;
-import fr.vergne.dmmorpg.sample.Property;
 import fr.vergne.dmmorpg.sample.world.WorldMap.PositionUpdate;
+import fr.vergne.dmmorpg.sample.world.action.Property;
 
 public class WorldMap<T> implements Updatable<PositionUpdate<T>> {
 

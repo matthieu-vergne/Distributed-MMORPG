@@ -33,6 +33,9 @@ public class PlayerRenderer implements Renderer<Player, Graphics> {
 		int imageIndex = getImageIndex(player.getDirection());
 		Rectangle bounds = g.getClipBounds();
 		int scale = bounds.width / image.getWidth();
+		if (scale == 0) {
+			throw new RuntimeException("Zero scale: " + bounds.width + "/" + image.getWidth());
+		}
 		int heightOffset = imageIndex * (bounds.height / scale);
 		g.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, 0, heightOffset, image.getWidth(),
 				heightOffset + (bounds.height / scale), null);

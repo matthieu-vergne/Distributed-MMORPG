@@ -1,7 +1,10 @@
 package fr.vergne.dmmorpg.sample.world;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import fr.vergne.dmmorpg.Updatable;
@@ -12,6 +15,7 @@ import fr.vergne.dmmorpg.sample.zone.Zone;
 
 public class World implements Updatable<WorldUpdate> {
 
+	private final Map<String, Player> players = new HashMap<>();
 	private final WorldMap<Player> playerMap = new WorldMap<>();
 	private final Collection<Listener<? super WorldUpdate>> listeners = new LinkedList<>();
 	private final Listener<WorldUpdate> updateListener = update -> Updatable.fireUpdate(listeners, update);
@@ -28,29 +32,41 @@ public class World implements Updatable<WorldUpdate> {
 		this.leavePolicy = leavePolicy;
 	}
 
-	public void add(Player player, WorldPosition position) {
-		if (playerMap.getPosition(player) == null) {
+	public Player addPlayer(String id, WorldPosition position) {
+		if (players.containsKey(id)) {
+			throw new IllegalStateException("Player already known: " + id);
+		} else {
+			Player player = new Player();
+			players.put(id, player);
 			playerMap.put(player, position);
 			player.listenUpdate(updateListener);
-		} else {
-			throw new IllegalStateException("Player already known: " + player);
+			return player;
 		}
 	}
 
-	public void remove(Player player) {
-		if (playerMap.remove(player)) {
+	public void removePlayer(String id) {
+		Player player = players.remove(id);
+		if (player != null) {
+			playerMap.remove(player);
 			player.unlistenUpdate(updateListener);
 		} else {
-			// No such thing
+			throw new NoSuchElementException("Unknown player: " + id);
 		}
 	}
 
-	public void actTowards(Player player, Direction direction) {
+	public Player getPlayer(String id) {
+		return players.get(id);
+	}
+
+	public boolean actTowards(String id, Direction direction) {
+		Player player = getPlayer(id);
 		WorldPosition start = playerMap.getPosition(player);
 		Objects.requireNonNull(start, "Unknown player: " + player);
+		boolean isModified = false;
 
 		if (player.getDirection() != direction) {
 			player.setDirection(direction);
+			isModified = true;
 		} else {
 			// Direction already OK
 		}
@@ -58,9 +74,11 @@ public class World implements Updatable<WorldUpdate> {
 		if (canMove(player, start, direction)) {
 			WorldPosition stop = start.move(direction);
 			playerMap.put(player, stop);
+			isModified = true;
 		} else {
 			// Cannot move
 		}
+		return isModified;
 	}
 
 	private boolean canMove(Player player, WorldPosition position, Direction direction) {

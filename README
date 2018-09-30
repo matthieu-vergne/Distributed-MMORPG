@@ -15,7 +15,7 @@ II - WHAT IS NOT THIS PROJECT?
 
 In order to make it clear, this project is not an implementation of a basic
 MMORPG with a distributed approach. A basic MMORPG implies to have a known world,
-well-controled by some administrators, where each player evoluates helped by Non
+well-controled by some administrators, where each player evolves with the help of Non
 Player Characters (NPC). This kind of game is not adapted to a completely
 distributed architecture, as :
 
@@ -30,14 +30,14 @@ to expect from a completely distributed system (where each part can disappear at
 any time).
 
 In brief, this is not the kind of game you can tell "Wow, great place with a lot
-of mobs to kill ! I will make a team for the next weak in order to go farm
-there." as this place can be absent the next week (and possibly never come back).
+of mobs to kill ! I will make a team for the next week to go farm there." as this
+place can be missing the next week (and possibly never come back).
 
 
 III - WHAT ARE THE FINAL OBJECTIVES?
 
 
-At the end, a complete game must "emerge" from the network. If no people run the
+At the end, a complete game must "emerge" from the players. If no people run the
 client the game is stopped (does not run at all), but from the first launched
 client the game must be ready to play. The available world depends on the
 connected client, as each one have a part of it. This world always evolve
@@ -50,14 +50,14 @@ of the world in such rare resources (it is also a better choice to save the
 resources of the rare client, who does not want to wait a long moment before to
 play a bit) or give the possibility to synchronize several clients on a same
 part of the world (make redundant data), but this is an advanced study which is
-not a priority yet. For the beginning we can just do with available clients.
+not a priority yet. For the start we can just do with available clients.
 
 
 IV - WHAT KIND OF MMORPG?
 
 
 Sincerely this question stay opened, as there is no exact idea to what will be
-the features of the game (this project as started on a stubborn reason -make a
+the features of the game (this project has started on a stubborn reason -make a
 100% distributed game- and a personnal desire -make a MMORPG-... I know I am
 helpless {'^_^}).
 
